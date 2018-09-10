@@ -346,3 +346,47 @@ CREATE TABLE Transferencia(
 
 )ENGINE = InnoDB;
 
+########################################################################################
+########################################################################################
+#-----------------------------------Usuarios-------------------------------------------#
+########################################################################################
+########################################################################################
+
+#elimino el usuario vacio
+#drop user ''@'localhost';
+
+#Creo el usuario admin que tiene acceso a todas las tablas de la base de datos
+CREATE USER 'admin_banco'@'localhost' IDENTIFIED BY 'admin';
+
+#Privilegios
+GRANT ALL PRIVILEGES ON banco.* TO 'admin_banco'@'localhost' WITH GRANT OPTION;
+
+#############################################################################
+###########################################################################
+
+CREATE USER 'empleado'@'%'  IDENTIFIED BY 'empleado';
+
+GRANT SELECT ON banco.Empleado TO 'empleado'@'%';
+GRANT SELECT ON banco.Sucursal TO 'empleado'@'%';
+GRANT SELECT ON banco.Tasa_Plazo_Fijo TO 'empleado'@'%';
+GRANT SELECT ON banco.Tasa_Prestamo TO 'empleado'@'%';
+GRANT SELECT ON banco.Prestamo TO 'empleado'@'%';
+GRANT INSERT ON banco.Prestamo TO 'empleado'@'%';
+GRANT SELECT ON banco.Plazo_Fijo TO 'empleado'@'%';
+GRANT INSERT ON banco.Plazo_Fijo TO 'empleado'@'%';
+GRANT SELECT ON banco.Plazo_Cliente TO 'empleado'@'%';
+GRANT INSERT ON banco.Plazo_Cliente TO 'empleado'@'%';
+GRANT SELECT ON banco.Caja_Ahorro TO 'empleado'@'%';
+GRANT INSERT ON banco.Caja_Ahorro TO 'empleado'@'%';
+GRANT UPDATE ON banco.Caja_Ahorro TO 'empleado'@'%';
+
+
+
+GRANT SELECT ON banco.Tarjeta TO 'empleado'@'%';
+GRANT INSERT ON banco.Tarjeta TO 'empleado'@'%';
+GRANT SELECT ON banco.Cliente_CA TO 'empleado'@'%';
+GRANT INSERT ON banco.Cliente_CA TO 'empleado'@'%';
+GRANT UPDATE ON banco.Cliente_CA TO 'empleado'@'%';
+
+
+
