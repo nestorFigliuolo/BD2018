@@ -39,7 +39,7 @@ CREATE TABLE Empleado (
     PRIMARY KEY (legajo),
 
     CONSTRAINT FK_empleado_nro_suc
-    FOREIGN KEY (nro_suc) REFERENCES sucursal(nro_suc)
+    FOREIGN KEY (nro_suc) REFERENCES Sucursal(nro_suc)
 
 ) ENGINE = InnoDB;
 
@@ -72,7 +72,7 @@ CREATE TABLE Plazo_Fijo (
     PRIMARY KEY (nro_plazo),
 
     CONSTRAINT fk_plazo_fijo_nro_suc
-    FOREIGN KEY (nro_suc) REFERENCES sucursal(nro_suc)
+    FOREIGN KEY (nro_suc) REFERENCES Sucursal(nro_suc)
 
 ) ENGINE = InnoDB;
 
@@ -352,9 +352,6 @@ CREATE TABLE Transferencia(
 ########################################################################################
 ########################################################################################
 
-#elimino el usuario vacio
-#drop user ''@'localhost';
-
 #Creo el usuario admin que tiene acceso a todas las tablas de la base de datos
 CREATE USER 'admin_banco'@'localhost' IDENTIFIED BY 'admin';
 
@@ -362,31 +359,54 @@ CREATE USER 'admin_banco'@'localhost' IDENTIFIED BY 'admin';
 GRANT ALL PRIVILEGES ON banco.* TO 'admin_banco'@'localhost' WITH GRANT OPTION;
 
 #############################################################################
-###########################################################################
 
 CREATE USER 'empleado'@'%'  IDENTIFIED BY 'empleado';
 
 GRANT SELECT ON banco.Empleado TO 'empleado'@'%';
+
 GRANT SELECT ON banco.Sucursal TO 'empleado'@'%';
+
 GRANT SELECT ON banco.Tasa_Plazo_Fijo TO 'empleado'@'%';
+
 GRANT SELECT ON banco.Tasa_Prestamo TO 'empleado'@'%';
+
 GRANT SELECT ON banco.Prestamo TO 'empleado'@'%';
 GRANT INSERT ON banco.Prestamo TO 'empleado'@'%';
+
 GRANT SELECT ON banco.Plazo_Fijo TO 'empleado'@'%';
 GRANT INSERT ON banco.Plazo_Fijo TO 'empleado'@'%';
+
 GRANT SELECT ON banco.Plazo_Cliente TO 'empleado'@'%';
 GRANT INSERT ON banco.Plazo_Cliente TO 'empleado'@'%';
+
 GRANT SELECT ON banco.Caja_Ahorro TO 'empleado'@'%';
 GRANT INSERT ON banco.Caja_Ahorro TO 'empleado'@'%';
 GRANT UPDATE ON banco.Caja_Ahorro TO 'empleado'@'%';
 
-
-
 GRANT SELECT ON banco.Tarjeta TO 'empleado'@'%';
 GRANT INSERT ON banco.Tarjeta TO 'empleado'@'%';
+
 GRANT SELECT ON banco.Cliente_CA TO 'empleado'@'%';
 GRANT INSERT ON banco.Cliente_CA TO 'empleado'@'%';
 GRANT UPDATE ON banco.Cliente_CA TO 'empleado'@'%';
+
+#############################################################################
+
+CREATE USER 'atm'@'%' IDENTIFIED BY 'atm';
+
+CREATE VIEW banco.trans_cajas_ahorro AS 
+    SELECT
+        ca.nro_ca, ca.saldo,
+        t.nro_trans, t.fecha hora,
+        c.nro_cliente, c.tipo_doc, c.numero_doc, c.nombre, c.apellido
+    FROM 
+        Caja_Ahorro as ca JOIN 
+        Transaccion as t JOIN
+        Cliente as c;
+
+GRANT SELECT ON banco.trans_cajas_ahorro TO 'atm'@'%';
+
+
 
 
 
