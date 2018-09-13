@@ -397,36 +397,123 @@ CREATE USER 'atm'@'%' IDENTIFIED BY 'atm';
 
 CREATE VIEW trans_cajas_ahorro AS 
  
- (SELECT
+ 	SELECT t.fecha,t.hora,t.monto,TPCYDYC.*
+
+  	FROM 
+  	 Transaccion as t ,
+  	(
+
+  		(SELECT DETYC.*, tpc.cod_caja
+
+	  	FROM 
+	    Transaccion_por_caja as tpc ,
+	    (
+	    	(SELECT 
+	          "--" as tipo_doc, "--" as nro_doc, "--" as apellido, "--" as nombre ,"Deposito" as Tipo ,"--" as nro_cliente, depo.*,ca.saldo,
+	          "--" as destino
+	          FROM Deposito as depo,
+	            Caja_Ahorro as ca
+	          WHERE
+	          	depo.nro_ca = ca.nro_ca
+	   	 	)
+
+	   		UNION 
+
+	   		(
+	   			SELECT c.tipo_doc, c.nro_doc, c.apellido, c.nombre, EYT.*
+
+	   			FROM Cliente as c, 
+
+		   		(
+			   		(SELECT 
+			          "Extraccion", Extra.nro_cliente,Extra.nro_trans,Extra.nro_ca,ca.saldo,"--" as destino 
+			          FROM Extraccion as Extra,
+			          	Caja_Ahorro as ca
+			          WHERE
+			          	Extra.nro_ca = ca.nro_ca
+			   	 	)
+			    	UNION
+
+			    	(SELECT 
+			        	"Transferencia",t.nro_cliente,t.nro_trans,t.origen,ca.saldo,t.destino 
+						FROM Transferencia as t,
+						Caja_Ahorro as ca
+						WHERE
+							t.origen = ca.nro_ca
+			    	)
+		    	) EYT
+
+		    WHERE
+		    	c.nro_cliente = EYT.nro_cliente
+		    )
+	    ) DETYC
+	    WHERE 
+	    	tpc.nro_trans = DETYC.nro_trans
+		)
+
+    UNION
+
+    	(
+    	SELECT c.tipo_doc, c.nro_doc, c.apellido, c.nombre, D.*,"--"
+
+	   	FROM Cliente as c, 
+	     	(SELECT 
+	       		"Debito",deb.nro_cliente,deb.nro_trans,deb.nro_ca,ca.saldo,"--"
+	        FROM 
+	        	Debito as deb,
+	        	Caja_Ahorro as ca
+	        WHERE
+	        	deb.nro_ca = ca.nro_ca
+
+	     	) D
+	    WHERE
+	    	c.nro_cliente = D.nro_cliente
+		)
+    )TPCYDYC
+
+
+  	WHERE 
+  	    t.nro_trans = TPCYDYC.nro_trans;
+
+
+
+    
+
+      
+     
+     
+     
+     
+
+
+ /*(SELECT
  	    ca.nro_ca, ca.saldo,
         t.nro_trans, t.fecha ,t.hora,"Deposito" as Tipo,t.monto,tpc.cod_caja,
-        c.nro_cliente, c.tipo_doc, c.nro_doc, c.nombre, c.apellido
+        c.nro_cliente, c.tipo_doc, c.nro_doc, c.nombre, c.apellido,"nada" as CajaDestino
     FROM 
         (Caja_Ahorro as ca JOIN 
         Transaccion as t JOIN 
         Transaccion_por_caja as tpc JOIN
         Cliente as c JOIN
-        Debito  
+        Deposito  
         ))
 
-      UNION
+     UNION
 
  (SELECT
  	    ca.nro_ca, ca.saldo,
         t.nro_trans, t.fecha ,t.hora,"Transferencia",t.monto,tpc.cod_caja,
-        c.nro_cliente, c.tipo_doc, c.nro_doc, c.nombre, c.apellido
+        c.nro_cliente, c.tipo_doc, c.nro_doc, c.nombre, c.apellido,trans.destino
     FROM 
         (Caja_Ahorro as ca JOIN 
         Transaccion as t JOIN 
         Transaccion_por_caja as tpc JOIN
         Cliente as c JOIN
-        Debito  
-        ))
-
- ;
+        Transferencia as trans
+        ));
 
 
-     
+   */  
 
 GRANT SELECT ON trans_cajas_ahorro TO 'atm'@'%';
 
