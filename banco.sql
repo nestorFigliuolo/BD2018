@@ -16,7 +16,7 @@ CREATE TABLE Sucursal (
     nro_suc INT(3) unsigned NOT NULL AUTO_INCREMENT,
     nombre VARCHAR(32) NOT NULL,
     direccion VARCHAR(32) NOT NULL,
-    telefono VARCHAR(10) NOT NULL,
+    telefono VARCHAR(32) NOT NULL,
     horario VARCHAR(32) NOT NULL,
     cod_postal INT(4) unsigned NOT NULL,
 
@@ -69,7 +69,7 @@ CREATE TABLE Plazo_Fijo (
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE NOT NULL,
     tasa_interes DECIMAL(4, 2) unsigned NOT NULL,
-    interes DECIMAL(16, 2) unsigned AS ((capital * tasa_interes * TO_DAYS(TIMEDIFF(fecha_fin, fecha_inicio))/ 36500)) NOT NULL,
+    interes DECIMAL(16, 2) unsigned AS ((capital * tasa_interes * (DATEDIFF(fecha_fin, fecha_inicio)))/ 36500) NOT NULL,
     nro_suc INT(3) unsigned NOT NULL,
 
 
@@ -342,15 +342,16 @@ CREATE TABLE Transferencia(
 ########################################################################################
 
 #Creo el usuario admin que tiene acceso a todas las tablas de la base de datos
-CREATE USER 'admin_banco'@'localhost' IDENTIFIED BY 'admin';
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
 
 #Privilegios
-GRANT ALL PRIVILEGES ON banco.* TO 'admin_banco'@'localhost' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON banco.* TO 'admin'@'localhost' WITH GRANT OPTION;
 
 #############################################################################
 
 CREATE USER 'empleado'@'%'  IDENTIFIED BY 'empleado';
 
+#solo realizar consultas sobre empleado ,sucursal ,tasa_plazo_fijo y tasa_prestamo
 GRANT SELECT ON banco.Empleado TO 'empleado'@'%';
 
 GRANT SELECT ON banco.Sucursal TO 'empleado'@'%';
@@ -358,6 +359,7 @@ GRANT SELECT ON banco.Sucursal TO 'empleado'@'%';
 GRANT SELECT ON banco.Tasa_Plazo_Fijo TO 'empleado'@'%';
 
 GRANT SELECT ON banco.Tasa_Prestamo TO 'empleado'@'%';
+#######################################################
 
 GRANT SELECT ON banco.Prestamo TO 'empleado'@'%';
 GRANT INSERT ON banco.Prestamo TO 'empleado'@'%';
@@ -370,152 +372,135 @@ GRANT INSERT ON banco.Plazo_Cliente TO 'empleado'@'%';
 
 GRANT SELECT ON banco.Caja_Ahorro TO 'empleado'@'%';
 GRANT INSERT ON banco.Caja_Ahorro TO 'empleado'@'%';
-GRANT UPDATE ON banco.Caja_Ahorro TO 'empleado'@'%';
 
 GRANT SELECT ON banco.Tarjeta TO 'empleado'@'%';
 GRANT INSERT ON banco.Tarjeta TO 'empleado'@'%';
+
+#######################################################
 
 GRANT SELECT ON banco.Cliente_CA TO 'empleado'@'%';
 GRANT INSERT ON banco.Cliente_CA TO 'empleado'@'%';
 GRANT UPDATE ON banco.Cliente_CA TO 'empleado'@'%';
 
+GRANT SELECT ON banco.Cliente TO 'empleado'@'%';
+GRANT INSERT ON banco.Cliente TO 'empleado'@'%';
+GRANT UPDATE ON banco.Cliente TO 'empleado'@'%';
+
+GRANT SELECT ON banco.Pago TO 'empleado'@'%';
+GRANT INSERT ON banco.Pago TO 'empleado'@'%';
+GRANT UPDATE ON banco.Pago TO 'empleado'@'%';
+
+
+
+
+#############################################################################
+# Vista trans_cajas_ahorro  que es utilizada por el usuario ATM
 #############################################################################
 
-CREATE USER 'atm'@'%' IDENTIFIED BY 'atm';
-
-
-/*CREATE VIEW trans_cajas_ahorro AS 
-    SELECT
-        ca.nro_ca, ca.saldo,
-        t.nro_trans, t.fecha ,t.hora,t.monto,caja.cod_caja,t.destino,
-        c.nro_cliente, c.tipo_doc, c.nro_doc, c.nombre, c.apellido
-    FROM 
-        (Caja_Ahorro as ca JOIN 
-        Transaccion as t JOIN
-        Cliente as c);
-*/
 
 CREATE VIEW trans_cajas_ahorro AS 
  
- 	SELECT t.fecha,t.hora,t.monto,TPCYDYC.*
+   SELECT t.fecha,t.hora,t.monto,TPCYDYC.*
 
-  	FROM 
-  	 Transaccion as t ,
-  	(
+  	    FROM 
+  	        Transaccion as t ,
+  	                    (#Realizo la union de los 4 tipos de transacciones para luego 
+  	                     #hacer el producto cartesiano con la transaccion	
 
-  		(SELECT DETYC.*, tpc.cod_caja
+  		                      (SELECT DETYC.*, tpc.cod_caja
 
-	  	FROM 
-	    Transaccion_por_caja as tpc ,
-	    (
-	    	(SELECT 
-	          "--" as tipo_doc, "--" as nro_doc, "--" as apellido, "--" as nombre ,"Deposito" as Tipo ,"--" as nro_cliente, depo.*,ca.saldo,
-	          "--" as destino
-	          FROM Deposito as depo,
-	            Caja_Ahorro as ca
-	          WHERE
-	          	depo.nro_ca = ca.nro_ca
-	   	 	)
+	  	                            FROM 
+	                                    Transaccion_por_caja as tpc ,
+	                                                               (#Realizo las uniones de las transacciones que son por caja para luego 
+	                                                               	#hacer el producto cartesiono con "Transaccion_por_caja"
+	    	                                                        
+	    	                                                             (SELECT "--" as tipo_doc, "--" as nro_doc,
+	    	                                                                     "--" as apellido, "--" as nombre ,
+	                                                                             "Deposito" as Tipo ,"--" as nro_cliente,
+	                                                                              depo.*,ca.saldo,"--" as destino
+	                                                           
+	                                                                          FROM Deposito as depo,
+	                                                                          Caja_Ahorro as ca
+	                                                                      
+	                                                                       WHERE
+	          	                                                           depo.nro_ca = ca.nro_ca 
+	   	 	                                                             )
 
-	   		UNION 
+	   		                                                          UNION 
 
-	   		(
-	   			SELECT c.tipo_doc, c.nro_doc, c.apellido, c.nombre, EYT.*
+	   		                                                             (SELECT c.tipo_doc, c.nro_doc, c.apellido,
+	   		                                                                     c.nombre, EYT.*
 
-	   			FROM Cliente as c, 
+	   			                                                               FROM Cliente as c, 
+	   			                                                                              ( #Uno las transacciones Extraccion y transferecia
+	   			                                                                                #que necesitan conectarse con el cliente  
+			   		                                                                             
+			   		                                                                              (SELECT "Extraccion", Extra.nro_cliente,Extra.nro_trans,
+			   		                                                                                      Extra.nro_ca,ca.saldo,"--" as destino 
+			                                                                                          
+			                                                                                          FROM Extraccion as Extra,
+			          	                                                                                   Caja_Ahorro as ca
+			                                                                                          
+			                                                                                        WHERE
+			          	                                                                            Extra.nro_ca = ca.nro_ca
+			   	 	                                                                              )
+			    	                                                                            
+			    	                                                                            UNION
 
-		   		(
-			   		(SELECT 
-			          "Extraccion", Extra.nro_cliente,Extra.nro_trans,Extra.nro_ca,ca.saldo,"--" as destino 
-			          FROM Extraccion as Extra,
-			          	Caja_Ahorro as ca
-			          WHERE
-			          	Extra.nro_ca = ca.nro_ca
-			   	 	)
-			    	UNION
+			    	                                                                              (SELECT "Transferencia",t.nro_cliente,t.nro_trans,
+			    	                                                                              	       t.origen,ca.saldo,t.destino 
+						                                                                           
+						                                                                              FROM Transferencia as t,
+						                                                                                   Caja_Ahorro as ca
+						                                                                             
+						                                                                             WHERE
+							                                                                         t.origen = ca.nro_ca
+			    	                                                                               )
+		    	                                                                              
+		    	                                                                              )EYT
 
-			    	(SELECT 
-			        	"Transferencia",t.nro_cliente,t.nro_trans,t.origen,ca.saldo,t.destino 
-						FROM Transferencia as t,
-						Caja_Ahorro as ca
-						WHERE
-							t.origen = ca.nro_ca
-			    	)
-		    	) EYT
+		                                                                       WHERE
+		    	                                                               c.nro_cliente = EYT.nro_cliente
+		                                                                 )
 
-		    WHERE
-		    	c.nro_cliente = EYT.nro_cliente
-		    )
-	    ) DETYC
-	    WHERE 
-	    	tpc.nro_trans = DETYC.nro_trans
-		)
+	                                                                )DETYC
+	    
+	                              WHERE 
+	    	                      tpc.nro_trans = DETYC.nro_trans
+		                      
+		                      ) 
 
-    UNION
+                            UNION
 
-    	(
-    	SELECT c.tipo_doc, c.nro_doc, c.apellido, c.nombre, D.*,"--"
+    	                     (SELECT c.tipo_doc, c.nro_doc, c.apellido, c.nombre, D.*,"--"
 
-	   	FROM Cliente as c, 
-	     	(SELECT 
-	       		"Debito",deb.nro_cliente,deb.nro_trans,deb.nro_ca,ca.saldo,"--"
-	        FROM 
-	        	Debito as deb,
-	        	Caja_Ahorro as ca
-	        WHERE
-	        	deb.nro_ca = ca.nro_ca
+	   	                          FROM Cliente as c, 
+	     	                                      (SELECT "Debito",deb.nro_cliente,deb.nro_trans,deb.nro_ca,ca.saldo,"--"
+	                                                 
+	                                                   FROM Debito as deb,
+	        	                                            Caja_Ahorro as ca
+	                                                  WHERE
+	        	                                      deb.nro_ca = ca.nro_ca
+	        	                                  )D
+	                             WHERE
+	    	                     c.nro_cliente = D.nro_cliente
+		                    )
 
-	     	) D
-	    WHERE
-	    	c.nro_cliente = D.nro_cliente
-		)
-    )TPCYDYC
+                        )TPCYDYC
+       WHERE 
+  	   t.nro_trans = TPCYDYC.nro_trans; 
 
-
-  	WHERE 
-  	    t.nro_trans = TPCYDYC.nro_trans;
-
-
+########################################################################################################
 
     
 
       
-     
-     
-     
-     
-
-
- /*(SELECT
- 	    ca.nro_ca, ca.saldo,
-        t.nro_trans, t.fecha ,t.hora,"Deposito" as Tipo,t.monto,tpc.cod_caja,
-        c.nro_cliente, c.tipo_doc, c.nro_doc, c.nombre, c.apellido,"nada" as CajaDestino
-    FROM 
-        (Caja_Ahorro as ca JOIN 
-        Transaccion as t JOIN 
-        Transaccion_por_caja as tpc JOIN
-        Cliente as c JOIN
-        Deposito  
-        ))
-
-     UNION
-
- (SELECT
- 	    ca.nro_ca, ca.saldo,
-        t.nro_trans, t.fecha ,t.hora,"Transferencia",t.monto,tpc.cod_caja,
-        c.nro_cliente, c.tipo_doc, c.nro_doc, c.nombre, c.apellido,trans.destino
-    FROM 
-        (Caja_Ahorro as ca JOIN 
-        Transaccion as t JOIN 
-        Transaccion_por_caja as tpc JOIN
-        Cliente as c JOIN
-        Transferencia as trans
-        ));
-
-
-   */  
+CREATE USER 'atm'@'%' IDENTIFIED BY 'atm';     
 
 GRANT SELECT ON trans_cajas_ahorro TO 'atm'@'%';
+
+GRANT SELECT ON banco.Tarjeta TO 'atm'@'%';
+GRANT UPDATE ON banco.Tarjeta TO 'atm'@'%';
 
 
 
