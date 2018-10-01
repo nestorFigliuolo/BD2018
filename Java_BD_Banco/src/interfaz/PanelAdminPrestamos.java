@@ -41,8 +41,8 @@ public class PanelAdminPrestamos extends JPanel {
 		gbc_panelBotones.fill = GridBagConstraints.BOTH;
 		add(panelBotones, gbc_panelBotones);
 		
-			JButton botonLogin = FabBoton.construirBoton("Login");
-			botonLogin.addActionListener(new ActionListener() {
+			JButton botonPrestamo = FabBoton.construirBoton("Crear prestamo");
+			botonPrestamo.addActionListener(new ActionListener() {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -50,11 +50,11 @@ public class PanelAdminPrestamos extends JPanel {
 					
 				}
 			});
-			panelBotones.add(botonLogin);
+			panelBotones.add(botonPrestamo);
 			
-			JButton botonConsultaSaldo = FabBoton.construirBoton("Consultar Saldo");
-			botonConsultaSaldo.setEnabled(false);
-			botonConsultaSaldo.addActionListener(new ActionListener() {
+			JButton botonConsultarCliente = FabBoton.construirBoton("Consultar Cliente");
+			botonConsultarCliente.setEnabled(false);
+			botonConsultarCliente.addActionListener(new ActionListener() {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -62,11 +62,11 @@ public class PanelAdminPrestamos extends JPanel {
 					
 				}
 			});
-			panelBotones.add(botonConsultaSaldo);
+			panelBotones.add(botonConsultarCliente);
 			
-			JButton botonUltimosMovimientos = FabBoton.construirBoton("UltimosMovimientos");
-			botonUltimosMovimientos.setEnabled(false);
-			botonUltimosMovimientos.addActionListener(new ActionListener() {
+			JButton botonPagarCuotas = FabBoton.construirBoton("Pagar Cuotas seleccionadas");
+			botonPagarCuotas.setEnabled(false);
+			botonPagarCuotas.addActionListener(new ActionListener() {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -74,19 +74,7 @@ public class PanelAdminPrestamos extends JPanel {
 					
 				}
 			});
-			panelBotones.add(botonUltimosMovimientos);
-			
-			JButton botonMovimientoPeriodo = FabBoton.construirBoton("Movimientos por Periodo");
-			botonMovimientoPeriodo.setEnabled(false);
-			botonMovimientoPeriodo.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
-			panelBotones.add(botonMovimientoPeriodo);
+			panelBotones.add(botonPagarCuotas);
 			
 		
 		
