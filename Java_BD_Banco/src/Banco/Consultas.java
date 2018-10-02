@@ -104,7 +104,7 @@ public JList<String> nombreAtributosTabla(String nombreTabla)
 }
 
 
-
+/*
 
 public JTable UltimosMovimientos(String numeroTarjeta)
 {	   
@@ -178,8 +178,8 @@ public JTable UltimosMovimientos(String numeroTarjeta)
 
 	
 }
-
-
+*/
+/*
 public String saldoActual(String numeroTarjeta)
 {
 	
@@ -203,7 +203,7 @@ public String saldoActual(String numeroTarjeta)
 	
 	return null;
 }
-
+*/
 private void conectarBD(String user,String pw,DBTable tabla)
 {
       try
@@ -238,7 +238,7 @@ private void conectarBD(String user,String pw,DBTable tabla)
       
 }
 
-
+/*
 private void conectarBD()
 {
    if (this.conexionBD == null)
@@ -272,7 +272,7 @@ private void conectarBD()
       }
    }
 }
-
+*/
 
 
 

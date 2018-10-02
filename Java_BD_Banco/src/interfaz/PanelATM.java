@@ -141,10 +141,11 @@ public class PanelATM extends JPanel {
 					while (!verificar) {	
 						int option = JOptionPane.showConfirmDialog(null, message, "Ingrese Numero y PIN", JOptionPane.OK_CANCEL_OPTION);
 						if (option == JOptionPane.OK_OPTION) {	
-							String nroTarjeta  = fieldNroTarjeta.getPassword().toString();
-							String pin = fieldNroPin.getPassword().toString();
+							String nroTarjeta  = new String( fieldNroTarjeta.getPassword());
+							String pin = new String(fieldNroPin.getPassword());
 							consul = new ConsultaATM(nroTarjeta,pin);
 							if(consul.existeTarjeta()) {
+								
 					           verificar = true;
 				               botonConsultaSaldo.setEnabled(true);
 				               botonUltimosMovimientos.setEnabled(true);

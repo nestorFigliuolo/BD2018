@@ -37,6 +37,36 @@ public class Conexion {
 		
 		return conexionBD;
 	}
+	
+	public void conectarBD(DBTable tabla)
+	{
+	      try
+	      {
+	         String driver ="com.mysql.cj.jdbc.Driver";
+	     	 
+	         //establece una conexión con la  B.D. "bancos"  usando directamante una tabla DBTable    
+	         tabla.connectDatabase(driver, uriConexion, usuario, clave);
+	        
+	      }
+	      catch (SQLException ex)
+	      {
+	          /*JOptionPane.showInputDialog(this,
+	                                        "Se produjo un error al intentar conectarse a la base de datos.\n" + ex.getMessage(),
+	                                        "Error",
+	                                        JOptionPane.ERROR_MESSAGE); */
+	         System.out.println("SQLException: " + ex.getMessage());
+	         System.out.println("SQLState: " + ex.getSQLState());
+	         System.out.println("VendorError: " + ex.getErrorCode());
+	      }
+	      catch (ClassNotFoundException e)
+	      {
+	         e.printStackTrace();
+	      }
+	 
+	      
+	      
+	}
+	
 
 	
 }

@@ -29,7 +29,7 @@ private static Consultas consu;
 		
 		System.out.println(p.existeTarjeta());
 	
-		System.out.println(p.saldoActual());
+		//System.out.println(p.saldoActual());
 		//p.MovimientoPorPeriodo("20190202", "20080101")
           
 		
@@ -43,10 +43,7 @@ private static Consultas consu;
 			t.setPreferredSize(new Dimension(800, 600));
 			t.setVisible(true);
 			
-			
-			Calendar n = Calendar.getInstance();
-			 JulianCalendar init = null;
-			 System.out.println(init.getCalendarDate());
+		
 	
 	   }	
 	
