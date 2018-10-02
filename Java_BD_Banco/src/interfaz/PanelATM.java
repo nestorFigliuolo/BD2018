@@ -131,37 +131,36 @@ public class PanelATM extends JPanel {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					
-				boolean verificar = false;
-				
-				
-				while (verificar == false) {	
-				Hashtable<String, String> resul = new Hashtable<String,String>();
-				 int c = login(g,resul);
-				
-				if (c == JOptionPane.OK_OPTION) {	
-					String t = resul.get("nroTar");
-					String pin = resul.get("PIN");
-					consul = new ConsultaATM(t,pin);
-	
-					           if(consul.existeTarjeta())
-			                         {
-						              verificar = true;
-					                  botonConsultaSaldo.setEnabled(true);
-					                  botonUltimosMovimientos.setEnabled(true);
-					                  botonMovimientoPeriodo.setEnabled(true);
-					                  JOptionPane.showMessageDialog(g, "Login Exitoso","ATM",JOptionPane.PLAIN_MESSAGE,null);
-						             }
-					           else 
-						       {JOptionPane.showMessageDialog(g, "Numero de tarjeta o PIN incorrecto ingrese nuevamente los datos","Error Login", JOptionPane.ERROR_MESSAGE, null);
+					boolean verificar = false;
+					JPasswordField fieldNroTarjeta = new JPasswordField();
+					JPasswordField fieldNroPin = new JPasswordField();
+					Object[] message = {
+							"Numero de tarjeta:", fieldNroTarjeta,
+							"PIN:", fieldNroPin
+					};
+					while (!verificar) {	
+						int option = JOptionPane.showConfirmDialog(null, message, "Ingrese Numero y PIN", JOptionPane.OK_CANCEL_OPTION);
+						if (option == JOptionPane.OK_OPTION) {	
+							String nroTarjeta  = fieldNroTarjeta.getPassword().toString();
+							String pin = fieldNroPin.getPassword().toString();
+							consul = new ConsultaATM(nroTarjeta,pin);
+							if(consul.existeTarjeta()) {
+					           verificar = true;
+				               botonConsultaSaldo.setEnabled(true);
+				               botonUltimosMovimientos.setEnabled(true);
+				               botonMovimientoPeriodo.setEnabled(true);
+				               JOptionPane.showMessageDialog(null, "Login Exitoso","ATM",JOptionPane.PLAIN_MESSAGE,null);
+							}
+							else {
+				        	   JOptionPane.showMessageDialog(null, "Numero de tarjeta o PIN incorrecto ingrese nuevamente los datos","Error Login", JOptionPane.ERROR_MESSAGE, null);
 						       botonConsultaSaldo.setEnabled(false);
-				                  botonUltimosMovimientos.setEnabled(false);
-				                  botonMovimientoPeriodo.setEnabled(false);
-						       }
-				  }
-				else 
-					verificar = true;
-				                             
-				                           }
+				               botonUltimosMovimientos.setEnabled(false);
+				               botonMovimientoPeriodo.setEnabled(false);
+							}
+						}
+						else 
+							verificar = true;
+					}
 				}
 			});
 			panelBotones.add(botonLogin);
@@ -186,50 +185,5 @@ public class PanelATM extends JPanel {
 			
 		
 	}
-	
-	private int panelPeriodoFecha(JFrame frame,Hashtable<String, String> logininformation)
-	{
-		 JPanel panel = new JPanel(new BorderLayout(5, 5));
-		 JPanel label = new JPanel(new GridLayout(0, 1, 2, 2));
-		 label.add(new JLabel("Fecha Inicio", SwingConstants.RIGHT)); 
-		 label.add(new JLabel("Fecha Fin", SwingConstants.RIGHT));
-		 panel.add(label, BorderLayout.WEST);
-		 JPanel controls = new JPanel(new GridLayout(0, 1, 2, 2));
-		 JTextField init = new JTextField();
-		 init.setText("yyyy/mm/dd");
-		 controls.add(init); 
-		JTextField fin = new JTextField(); 
-		 fin.setText("yyyy/mm/dd");
-		controls.add(fin); 
-		panel.add(controls, BorderLayout.CENTER);
-     int x =  JOptionPane.showConfirmDialog(frame,panel, "Periodo", JOptionPane.OK_CANCEL_OPTION); 
-        logininformation.put("FechaInicio",  new String(init.getText()));
-	    logininformation.put("FechaFin", new String(fin.getText())); 
-		return x;
-     
-	}
-	
-	
-	/*
-	private int login(JFrame frame,Hashtable<String, String> logininformation) { 
-	
-		 JPanel panel = new JPanel(new BorderLayout(5, 5));
-		 JPanel label = new JPanel(new GridLayout(0, 1, 2, 2));
-		 label.add(new JLabel("Numero Tarjeta", SwingConstants.RIGHT)); 
-		 label.add(new JLabel("PIN", SwingConstants.RIGHT));
-		 panel.add(label, BorderLayout.WEST);
-		 JPanel controls = new JPanel(new GridLayout(0, 1, 2, 2));
-		 JPasswordField nroTar = new JPasswordField();
-		 controls.add(nroTar); 
-		JPasswordField password = new JPasswordField(); 
-		controls.add(password); 
-		panel.add(controls, BorderLayout.CENTER); 
-	   int x =  JOptionPane.showConfirmDialog(frame,panel, "login", JOptionPane.OK_CANCEL_OPTION); 
-		
-		logininformation.put("nroTar",  new String(nroTar.getPassword()));
-	    logininformation.put("PIN", new String(password.getPassword())); 
-		return x;
-		} 
-	*/
 
 }
