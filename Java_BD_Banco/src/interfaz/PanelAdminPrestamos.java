@@ -4,12 +4,16 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
@@ -42,6 +46,48 @@ public class PanelAdminPrestamos extends JPanel {
 		add(panelBotones, gbc_panelBotones);
 		
 			JButton botonPrestamo = FabBoton.construirBoton("Crear prestamo");
+			JButton botonConsultarCliente = FabBoton.construirBoton("Consultar Cliente");
+			JButton botonPagarCuotas = FabBoton.construirBoton("Pagar Cuotas seleccionadas");
+			
+			JButton botonLogin = FabBoton.construirBoton("Login");
+			botonLogin.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					boolean verificar = false;
+					JTextField fieldLegajo = new JTextField();
+					JPasswordField fieldPass = new JPasswordField();
+					Object[] message = {
+							"Legajo:", fieldLegajo,
+							"Contraseña:", fieldPass
+					};
+					while (!verificar) {	
+						int option = JOptionPane.showConfirmDialog(null, message, "Ingrese Legajo y Contraseña", JOptionPane.OK_CANCEL_OPTION);
+						if (option == JOptionPane.OK_OPTION) {	
+							String pass  = new String(fieldPass.getPassword());
+							if() {
+								
+					           verificar = true;
+				               botonPrestamo.setEnabled(true);
+				               botonConsultarCliente.setEnabled(true);
+				               botonPagarCuotas.setEnabled(true);
+				               JOptionPane.showMessageDialog(null, "Login Exitoso","Admin Prestamos",JOptionPane.PLAIN_MESSAGE,null);
+							}
+							else {
+				        	   JOptionPane.showMessageDialog(null, "Legajoo y/o contraseña incorrecta, ingresela nuevamente","Error Login", JOptionPane.ERROR_MESSAGE, null);
+				        	   botonPrestamo.setEnabled(false);
+				               botonConsultarCliente.setEnabled(false);
+				               botonPagarCuotas.setEnabled(false);
+							}
+						}
+						else 
+							verificar = true;
+					}
+					
+				}
+			});
+		
+			
 			botonPrestamo.addActionListener(new ActionListener() {
 				
 				@Override
@@ -52,7 +98,7 @@ public class PanelAdminPrestamos extends JPanel {
 			});
 			panelBotones.add(botonPrestamo);
 			
-			JButton botonConsultarCliente = FabBoton.construirBoton("Consultar Cliente");
+			
 			botonConsultarCliente.setEnabled(false);
 			botonConsultarCliente.addActionListener(new ActionListener() {
 				
@@ -64,7 +110,7 @@ public class PanelAdminPrestamos extends JPanel {
 			});
 			panelBotones.add(botonConsultarCliente);
 			
-			JButton botonPagarCuotas = FabBoton.construirBoton("Pagar Cuotas seleccionadas");
+			
 			botonPagarCuotas.setEnabled(false);
 			botonPagarCuotas.addActionListener(new ActionListener() {
 				

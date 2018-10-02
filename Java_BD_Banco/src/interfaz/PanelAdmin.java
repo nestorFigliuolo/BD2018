@@ -1,11 +1,15 @@
 package interfaz;
 
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +19,8 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
+import Banco.ConsultaATM;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -52,6 +58,41 @@ public class PanelAdmin extends JPanel {
 		add(panelBotones, gbc_panelBotones);
 		
 			JButton botonConsulta = FabBoton.construirBoton("Realizar Consulta");
+		
+			JButton botonLogin = FabBoton.construirBoton("Login Admin");
+			botonLogin.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					boolean verificar = false;
+					JPasswordField fieldPass = new JPasswordField();
+					Object[] message = {
+							"Contraseña:", fieldPass
+					};
+					while (!verificar) {	
+						int option = JOptionPane.showConfirmDialog(null, message, "Ingrese Numero y PIN", JOptionPane.OK_CANCEL_OPTION);
+						if (option == JOptionPane.OK_OPTION) {	
+							String pass  = new String(fieldPass.getPassword());
+							if() {
+								
+					           verificar = true;
+				               botonConsulta.setEnabled(true);
+				               JOptionPane.showMessageDialog(null, "Login Exitoso","Admin",JOptionPane.PLAIN_MESSAGE,null);
+							}
+							else {
+				        	   JOptionPane.showMessageDialog(null, "Contraseña incorrecta, ingresela nuevamente","Error Login", JOptionPane.ERROR_MESSAGE, null);
+						       botonConsulta.setEnabled(false);
+							}
+						}
+						else 
+							verificar = true;
+					}
+					
+				}
+			});
+		
+			
+			botonConsulta.setEnabled(false);
 			botonConsulta.addActionListener(new ActionListener() {
 				
 				@Override
