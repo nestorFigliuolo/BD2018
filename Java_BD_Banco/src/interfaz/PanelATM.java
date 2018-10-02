@@ -8,6 +8,9 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
 
 import javax.swing.JButton;
@@ -31,17 +34,17 @@ public class PanelATM extends JPanel {
 	
 	private JPanel panelBotones;
 	private JTable tableConsulta;
-	private JFrame g;
 	//obejeto que utiliza ATM para las consultas
 	
 	private ConsultaATM consul;
 	
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
+	private SimpleDateFormat sqldateFormat = new SimpleDateFormat("yyyymmdd");
 	/**
 	 * Create the panel.
 	 */
-	public PanelATM(JFrame f) {
+	public PanelATM() {
 		consul = null;
-		g = f;
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		setLayout(gridBagLayout);
 		setBackground(Interfaz.primaryLight);
@@ -97,30 +100,27 @@ public class PanelATM extends JPanel {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					Hashtable<String, String> resul = new Hashtable<String,String>();
-					int x = panelPeriodoFecha(g, resul);
-					if(x==JOptionPane.OK_OPTION) {
-						String fechaInitTemp = resul.get("FechaInicio");
-						String fechaInit = "";
-						
-						for (int i = 0; i< fechaInitTemp.length();i++)
-						{
-							if(fechaInitTemp.charAt(i)!='/')
-								fechaInit+=fechaInitTemp.charAt(i);
-						}
-						String fechaFinTemp = resul.get("FechaFin");
-						String fechaFin = "";
-						
-						for (int i = 0; i< fechaFinTemp.length();i++)
-						{
-							if(fechaFinTemp.charAt(i)!='/')
-								fechaFin+=fechaFinTemp.charAt(i);
-						}
+					JTextField textFieldFechaInicio = new JTextField();
+					JTextField textFieldFechaFin = new JTextField();
+					Object[] message = {
+							"Fecha inicial:", textFieldFechaInicio,
+							"Fecha final:", textFieldFechaFin
+					};
+					
+					int option = JOptionPane.showConfirmDialog(null, message, "Ingrese periodo", JOptionPane.OK_CANCEL_OPTION);
+					if (option == JOptionPane.OK_OPTION) {
 					    
-						
-						
-					consul.MovimientoPorPeriodo(tableConsulta, fechaInit,fechaFin);
-					}
+					    try {
+					    	String fechaInit = sqldateFormat.format(dateFormat.parse(textFieldFechaInicio.getText()));
+							String fechaFin = sqldateFormat.format(dateFormat.parse(textFieldFechaFin.getText()));
+							consul.MovimientoPorPeriodo(tableConsulta, fechaInit,fechaFin);
+						} catch (ParseException e1) {
+							JOptionPane.showMessageDialog(null, "El formato de fecha debe ser dia/mes/año", "Error", JOptionPane.ERROR_MESSAGE);
+							e1.printStackTrace();
+						}
+					} 
+					
+					
 				}
 			});
 			panelBotones.add(botonMovimientoPeriodo);
@@ -210,7 +210,7 @@ public class PanelATM extends JPanel {
 	}
 	
 	
-	
+	/*
 	private int login(JFrame frame,Hashtable<String, String> logininformation) { 
 	
 		 JPanel panel = new JPanel(new BorderLayout(5, 5));
@@ -230,6 +230,6 @@ public class PanelATM extends JPanel {
 	    logininformation.put("PIN", new String(password.getPassword())); 
 		return x;
 		} 
-	
+	*/
 
 }
