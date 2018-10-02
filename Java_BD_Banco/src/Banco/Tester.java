@@ -25,9 +25,9 @@ private static Consultas consu;
 		tabla = new DBTable();
 		consu = new Consultas();
 		
-		ConsultaATM p = new ConsultaATM("1234567890123200","12134dwed");
+		ConsultaAdminPrestamo em = new ConsultaAdminPrestamo("123", "tatarobert");
 		
-		System.out.println(p.existeTarjeta());
+		System.out.println(em.existeEmpleado());
 	
 		//System.out.println(p.saldoActual());
 		//p.MovimientoPorPeriodo("20190202", "20080101")
