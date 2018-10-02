@@ -69,7 +69,7 @@ public class Interfaz {
 	 */
 	private void initialize() {
 		panelAdmin = new PanelAdmin();
-		panelATM = new PanelATM();
+	
 		panelAdminPrestamos = new PanelAdminPrestamos();
 		
 		frame = new JFrame();
@@ -146,6 +146,8 @@ public class Interfaz {
 		
 		frame.getContentPane().add(panelMenu, BorderLayout.WEST);
 		frame.add(panelAdmin);
+		
+		panelATM = new PanelATM (frame);
 	}
 
 }
