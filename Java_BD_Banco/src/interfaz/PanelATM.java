@@ -103,6 +103,7 @@ public class PanelATM extends JPanel {
 					JTextField textFieldFechaInicio = new JTextField();
 					JTextField textFieldFechaFin = new JTextField();
 					Object[] message = {
+							"El formato de la fecha debe ser dd/mm/yyyy",
 							"Fecha inicial:", textFieldFechaInicio,
 							"Fecha final:", textFieldFechaFin
 					};
