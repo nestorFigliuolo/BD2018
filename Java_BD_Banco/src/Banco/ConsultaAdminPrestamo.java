@@ -45,4 +45,30 @@ public class ConsultaAdminPrestamo {
 		return false;
 	}
 
+	
+	public boolean clientePagandoPrestamo(String nroCliente) {
+     try {		
+				   stmt = conexionBD.createStatement();
+			       boolean r = false; 
+				   String SQL = "select fecha from prestamo "
+				               +" where nro_cliente = "+nroCliente 
+				               +" and date_add(fecha,interval cant_meses month ) > curdate()";
+				              
+				    rs = stmt.executeQuery(SQL);
+				    
+				    if(rs.next())
+				    	r = true;
+				    rs.close();
+				     stmt.close();
+				     
+				    return r;
+     }catch(SQLException e) {}
+	
+	
+	return false;
+	
+ }
+
+	
+	
 }

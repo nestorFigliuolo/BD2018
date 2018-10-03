@@ -25,9 +25,10 @@ private static Consultas consu;
 		tabla = new DBTable();
 		consu = new Consultas();
 		
-		ConsultaAdminPrestamo em = new ConsultaAdminPrestamo("123", "tatarobert");
+		ConsultaAdmin em = new ConsultaAdmin();
 		
-		System.out.println(em.existeEmpleado());
+		//System.out.println(em.clientePag);
+		
 	
 		//System.out.println(p.saldoActual());
 		//p.MovimientoPorPeriodo("20190202", "20080101")
@@ -39,7 +40,7 @@ private static Consultas consu;
 			//tabla.refresh();
 			//tabla.setMaximumSize(new Dimension(800,600));
 			t.setSize(800, 800);
-			//t.getContentPane().add(new JScrollPane(p.MovimientoPorPeriodo("20080202", "20160101")),BorderLayout.CENTER);
+			t.getContentPane().add(new JScrollPane(em.mostrarTablas()),BorderLayout.CENTER);
 			t.setPreferredSize(new Dimension(800, 600));
 			t.setVisible(true);
 			

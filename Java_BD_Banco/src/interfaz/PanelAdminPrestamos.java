@@ -17,15 +17,19 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import Banco.ConsultaAdminPrestamo;
+
 public class PanelAdminPrestamos extends JPanel {
 	
 	private JTable tableConsulta;
 	private JTable tableMorosos;
+	private ConsultaAdminPrestamo consu;
 
 	/**
 	 * Create the panel.
 	 */
 	public PanelAdminPrestamos() {
+		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		setLayout(gridBagLayout);
 		setBackground(Interfaz.primaryLight);
@@ -63,9 +67,11 @@ public class PanelAdminPrestamos extends JPanel {
 					};
 					while (!verificar) {	
 						int option = JOptionPane.showConfirmDialog(null, message, "Ingrese Legajo y Contraseña", JOptionPane.OK_CANCEL_OPTION);
-						if (option == JOptionPane.OK_OPTION) {	
+						if (option == JOptionPane.OK_OPTION) {
+							String legajo = fieldLegajo.getText();
 							String pass  = new String(fieldPass.getPassword());
-							if() {
+							consu = new ConsultaAdminPrestamo(legajo, pass);
+							if(consu.existeEmpleado()) {
 								
 					           verificar = true;
 				               botonPrestamo.setEnabled(true);
@@ -86,7 +92,7 @@ public class PanelAdminPrestamos extends JPanel {
 					
 				}
 			});
-		
+		    panelBotones.add(botonLogin);
 			
 			botonPrestamo.addActionListener(new ActionListener() {
 				

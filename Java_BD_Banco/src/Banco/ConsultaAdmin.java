@@ -6,8 +6,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JTable;
+import javax.swing.ListModel;
+import javax.swing.event.ListDataListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.sun.prism.ResourceFactoryListener;
@@ -70,7 +73,39 @@ public class ConsultaAdmin {
 	}
 
 
-	public JList<String> nombreAtributosTabla(String nombreTabla)
+	public void mostrarTablas(JList<String> lista){
+		try {
+				 Statement stmt = this.conexionBD.createStatement();
+			     String SQL = "show tables ";
+			     ResultSet rs = stmt.executeQuery(SQL);
+			     
+			     
+			     
+			     DefaultListModel<String> model = new DefaultListModel<String>();
+			     
+			    
+			     
+				 while(rs.next()) {
+					 
+					 model.addElement(rs.getString(1));
+					 
+				 }
+				 
+				 
+				 
+				 lista.setModel(model);
+				 
+				  rs.close();
+			      stmt.close();
+			      
+			 
+			     
+		}catch(SQLException e) {}
+		
+	
+	}
+	
+	public void nombreAtributosTabla(JList<String> lista,String nombreTabla)
 	{ 
 		 try
 	     { 
@@ -79,21 +114,24 @@ public class ConsultaAdmin {
 		     String SQL = "select * from "+nombreTabla;
 		     ResultSet rs = stmt.executeQuery(SQL);
 		     java.sql.ResultSetMetaData mt = rs.getMetaData();
-	         String [] arr = new String [20];
+		     
+		     DefaultListModel<String> model = new DefaultListModel<String>();
+		     
+	       
 		  
 		  for(int i= 1; i<=mt.getColumnCount();i++)
-		     arr[i]= mt.getColumnName(i);
+		      model.addElement(mt.getColumnName(i));
 		  
-		  JList<String> l = new JList<String>(arr);
+		  lista.setModel(model);
 		 
 		  rs.close();
 	      stmt.close();
 	      
-	      return l;
+	  
 	      
 	     }catch (SQLException ex) {}
 		
-		 return null;
+		
 		
 	}
 

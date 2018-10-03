@@ -15,12 +15,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import Banco.ConsultaATM;
+import Banco.ConsultaAdmin;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -33,11 +37,14 @@ public class PanelAdmin extends JPanel {
 	private JTable tableConsulta;
 	private JList<String> listNombreTablas;
 	private JList<String> listAtributosTabla;
+	
+	private ConsultaAdmin consu; 
 
 	/**
 	 * Create the panel.
 	 */
 	public PanelAdmin() {
+		consu = null;
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		setLayout(gridBagLayout);
 		setBackground(Interfaz.primaryLight);
@@ -47,6 +54,56 @@ public class PanelAdmin extends JPanel {
 		panelBotones.setBorder(new TitledBorder(new LineBorder(Interfaz.textColor), "Opciones", TitledBorder.CENTER, TitledBorder.TOP, null, Interfaz.textColor));
 		panelBotones.setBackground(Interfaz.primaryLight);
 		panelBotones.setForeground(Interfaz.textColor);
+		
+		listNombreTablas = new JList<String>();
+		listNombreTablas.setBorder(new TitledBorder(new LineBorder(Interfaz.textColor), "Nombre de las Tablas", TitledBorder.LEADING, TitledBorder.TOP, null, Interfaz.textColor));
+		listNombreTablas.setBackground(Interfaz.fondo);
+		listNombreTablas.setForeground(Interfaz.textColor);
+		GridBagConstraints gbc_listNombreTablas = new GridBagConstraints();
+		gbc_listNombreTablas.insets = new Insets(0, 0, 5, 0);
+		gbc_listNombreTablas.fill = GridBagConstraints.BOTH;
+		gbc_listNombreTablas.gridheight = 1;
+		gbc_listNombreTablas.gridwidth = 1;
+		gbc_listNombreTablas.weightx = 40;
+		gbc_listNombreTablas.weighty = 50;
+		gbc_listNombreTablas.gridx = 1;
+		gbc_listNombreTablas.gridy = 1;
+		
+		
+		
+		
+		add(new JScrollPane(listNombreTablas), gbc_listNombreTablas);
+		
+		listAtributosTabla = new JList<String>();
+		listAtributosTabla.setBorder(new TitledBorder(new LineBorder(Interfaz.textColor), "Nombre de los Atributos", TitledBorder.LEADING, TitledBorder.TOP, null, Interfaz.textColor));
+		listAtributosTabla.setBackground(Interfaz.fondo);
+		listAtributosTabla.setForeground(Interfaz.textColor);
+		GridBagConstraints gbc_listAtributosTabla = new GridBagConstraints();
+		gbc_listAtributosTabla.insets = new Insets(0, 0, 5, 0);
+		gbc_listAtributosTabla.fill = GridBagConstraints.BOTH;
+		gbc_listAtributosTabla.gridheight = 1;
+		gbc_listAtributosTabla.gridwidth = 1;
+		gbc_listAtributosTabla.weightx = 40;
+		gbc_listAtributosTabla.weighty = 50;
+		gbc_listAtributosTabla.gridx = 1;
+		gbc_listAtributosTabla.gridy = 2;
+		add(new JScrollPane(listAtributosTabla), gbc_listAtributosTabla);
+		
+		
+listNombreTablas.addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				
+				if (consu!=null) {
+					
+					String nombreTabla = listNombreTablas.getSelectedValue();
+					
+					consu.nombreAtributosTabla(listAtributosTabla, nombreTabla);
+				}
+			}
+		});
+		
 		
 		GridBagConstraints gbc_panelBotones = new GridBagConstraints();
 		gbc_panelBotones.gridx = 0;
@@ -73,11 +130,15 @@ public class PanelAdmin extends JPanel {
 						int option = JOptionPane.showConfirmDialog(null, message, "Ingrese Numero y PIN", JOptionPane.OK_CANCEL_OPTION);
 						if (option == JOptionPane.OK_OPTION) {	
 							String pass  = new String(fieldPass.getPassword());
-							if() {
+							if(pass.equals("admin")) {
 								
 					           verificar = true;
+					           consu = new ConsultaAdmin();
 				               botonConsulta.setEnabled(true);
 				               JOptionPane.showMessageDialog(null, "Login Exitoso","Admin",JOptionPane.PLAIN_MESSAGE,null);
+							  
+				              consu.mostrarTablas(listNombreTablas);  
+				              
 							}
 							else {
 				        	   JOptionPane.showMessageDialog(null, "Contraseña incorrecta, ingresela nuevamente","Error Login", JOptionPane.ERROR_MESSAGE, null);
@@ -90,7 +151,7 @@ public class PanelAdmin extends JPanel {
 					
 				}
 			});
-		
+		    panelBotones.add(botonLogin);
 			
 			botonConsulta.setEnabled(false);
 			botonConsulta.addActionListener(new ActionListener() {
@@ -120,35 +181,9 @@ public class PanelAdmin extends JPanel {
 		gbc_tableConsulta.gridy = 1;
 		add(tableConsulta, gbc_tableConsulta);
 		
-		listNombreTablas = new JList<String>();
-		listNombreTablas.setBorder(new TitledBorder(new LineBorder(Interfaz.textColor), "Nombre de las Tablas", TitledBorder.LEADING, TitledBorder.TOP, null, Interfaz.textColor));
-		listNombreTablas.setBackground(Interfaz.fondo);
-		listNombreTablas.setForeground(Interfaz.textColor);
-		GridBagConstraints gbc_listNombreTablas = new GridBagConstraints();
-		gbc_listNombreTablas.insets = new Insets(0, 0, 5, 0);
-		gbc_listNombreTablas.fill = GridBagConstraints.BOTH;
-		gbc_listNombreTablas.gridheight = 1;
-		gbc_listNombreTablas.gridwidth = 1;
-		gbc_listNombreTablas.weightx = 40;
-		gbc_listNombreTablas.weighty = 50;
-		gbc_listNombreTablas.gridx = 1;
-		gbc_listNombreTablas.gridy = 1;
-		add(listNombreTablas, gbc_listNombreTablas);
 		
-		listAtributosTabla = new JList<String>();
-		listAtributosTabla.setBorder(new TitledBorder(new LineBorder(Interfaz.textColor), "Nombre de los Atributos", TitledBorder.LEADING, TitledBorder.TOP, null, Interfaz.textColor));
-		listAtributosTabla.setBackground(Interfaz.fondo);
-		listAtributosTabla.setForeground(Interfaz.textColor);
-		GridBagConstraints gbc_listAtributosTabla = new GridBagConstraints();
-		gbc_listAtributosTabla.insets = new Insets(0, 0, 5, 0);
-		gbc_listAtributosTabla.fill = GridBagConstraints.BOTH;
-		gbc_listAtributosTabla.gridheight = 1;
-		gbc_listAtributosTabla.gridwidth = 1;
-		gbc_listAtributosTabla.weightx = 40;
-		gbc_listAtributosTabla.weighty = 50;
-		gbc_listAtributosTabla.gridx = 1;
-		gbc_listAtributosTabla.gridy = 2;
-		add(listAtributosTabla, gbc_listAtributosTabla);
+		
+		
 		
 	}
 
