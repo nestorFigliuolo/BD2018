@@ -6,9 +6,12 @@ import java.sql.SQLException;
 import java.util.Calendar;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import interfaz.PanelAdmin;
+import interfaz.PanelCrearPrestamo;
 import quick.dbtable.DBTable;
 import sun.util.calendar.JulianCalendar;
 
@@ -25,7 +28,12 @@ private static Consultas consu;
 		tabla = new DBTable();
 		consu = new Consultas();
 		
-		ConsultaAdmin em = new ConsultaAdmin();
+		ConsultaAdminPrestamo em = new ConsultaAdminPrestamo("1234", "tatarobert");
+		
+		
+		System.out.println(em.getNumeroCliente("41100940"));
+		
+		 //JOptionPane.showConfirmDialog(null, new PanelCrearPrestamo(), "Buscar Cliente", JOptionPane.OK_CANCEL_OPTION);
 		
 		//System.out.println(em.clientePag);
 		
@@ -40,7 +48,7 @@ private static Consultas consu;
 			//tabla.refresh();
 			//tabla.setMaximumSize(new Dimension(800,600));
 			t.setSize(800, 800);
-			t.getContentPane().add(new JScrollPane(em.mostrarTablas()),BorderLayout.CENTER);
+	//	t.getContentPane().add(new JScrollPane(em.mostrarTablas()),BorderLayout.CENTER);
 			t.setPreferredSize(new Dimension(800, 600));
 			t.setVisible(true);
 			
