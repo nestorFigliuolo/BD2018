@@ -23,7 +23,7 @@ public class ConsultaAdminPrestamo {
 	private String legajo;
 	private String password;
 	
-	private int nro_prestamo = 900;
+
 	private int nro_pago = 1;
 	
 	public ConsultaAdminPrestamo(String legajo,String password) {
@@ -108,6 +108,66 @@ public class ConsultaAdminPrestamo {
 	}
 
 	
+	public void establecerCuotaPagada(String nro_prestamo,String nro_pago) {
+		
+		try {
+			 stmt = conexionBD.createStatement();
+			 String sql = "UPDATE pago " +
+                     "SET fecha_pago = curdate() "+
+                     "WHERE nro_prestamo = "+nro_prestamo
+                     +" and nro_pago = "+nro_pago;
+			 
+			 stmt.execute(sql);
+			 
+			
+		}catch(SQLException e) {
+			
+		}
+		
+	}
+	
+	public void pagarCuotas(String nro_doc,JTable tabla) {
+		
+		try {
+				   stmt = conexionBD.createStatement();
+				   
+				   String SQL = "select nro_prestamo,nro_pago,valor_cuota,fecha_venc "
+				   	    + " from pago natural join prestamo natural join cliente"
+			                  +" where nro_doc = "+nro_doc
+			                 +" and fecha_pago is NULL";
+				   
+				    rs = stmt.executeQuery(SQL);
+				   
+				     String data [][] = {};
+				     String col [] = {"Nro_prestamo","Nro_pago","Valor_cuota","Fecha_venc"};
+				     
+				     ModeloTabla modelo = new ModeloTabla(data, col);
+				     
+				      int fil = 0;
+				       while( rs.next())
+				       {    modelo.insertRow(fil, new Object[]{});
+				       	 modelo.setValueAt(rs.getString(1), fil, 0);
+				       	 modelo.setValueAt(rs.getString(2), fil, 1);
+				       	 modelo.setValueAt(rs.getString(3), fil, 2);     
+				  	     modelo.setValueAt(rs.getString(4), fil, 3);
+				      
+				  	        fil++;
+				       }
+				       
+				      
+				       
+				       tabla.setModel(modelo);
+				   
+			   
+			   
+			   
+			
+		}catch(SQLException e) {
+			
+		}
+	}
+	
+	
 	public boolean clientePagandoPrestamo(String nro_doc) {
      try {		
 				   stmt = conexionBD.createStatement();
@@ -156,7 +216,7 @@ public class ConsultaAdminPrestamo {
 	}
 	
 	
-	public void showAllClient(JTable tabla,JButton boton) {
+	public void showAllClient(JTable tabla,JButton boton1,JButton boton2) {
 		try {
 		String SQL = "Select apellido,nombre,tipo_doc,nro_doc "
 				     + "from Cliente";
@@ -214,13 +274,17 @@ public class ConsultaAdminPrestamo {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-				  int row1=tabla.getSelectedRow();
-				  int row2=tabla.getSelectedRow();
-				  boton.setEnabled(true);
+				
+				
+				
+				 
+				  boton1.setEnabled(true);
+				  boton2.setEnabled(true);
+				  Object [] ob = {boton1,boton2};
 				  
-				  if(e.getClickCount()==2 && row1==row2)
+				  if(e.getClickCount()==2)
 				  { 
-			        JOptionPane.showMessageDialog(null, ""+row1, "mostrar", JOptionPane.INFORMATION_MESSAGE); 
+			        JOptionPane.showMessageDialog(null,ob, "Acciones sobre el cliente", JOptionPane.INFORMATION_MESSAGE); 
 				  }
 			}
 		});
@@ -258,11 +322,24 @@ public class ConsultaAdminPrestamo {
 
 	public void crearPrestamo(String cant_meses,String monto,String tasa_interes,String nro_cliente) {
 		 try {
+			     
 				   stmt = this.conexionBD.createStatement();
 		         
-				    String sql = "INSERT INTO prestamo(nro_prestamo,fecha,cant_meses,monto,tasa_interes,legajo,nro_cliente) " +
-		                     "VALUES ("+nro_prestamo+",curdate(),"+cant_meses+","+monto+","+tasa_interes+","+legajo+","+nro_cliente+")";
+				    String sql = "INSERT INTO prestamo(fecha,cant_meses,monto,tasa_interes,legajo,nro_cliente) " +
+		                     "VALUES (curdate(),"+cant_meses+","+monto+","+tasa_interes+","+legajo+","+nro_cliente+")";
 		           stmt.execute(sql);
+		           
+		           
+		           String sql2 = "Select nro_prestamo "
+		           		       + "from prestamo natural join cliente "
+		           		       + "where fecha = curdate() "
+		           		       + "and nro_cliente = "+nro_cliente;
+		           
+		           rs = stmt.executeQuery(sql2);
+		           
+		           rs.next();
+		           
+		           String nro_prestamo = rs.getString("nro_prestamo");
 		               
 		               for(int i=1; i<=Integer.parseInt(cant_meses);i++ ) { 
 		                  sql = "INSERT INTO pago(nro_prestamo,nro_pago,fecha_venc) "
@@ -272,7 +349,7 @@ public class ConsultaAdminPrestamo {
 		               }
 		           stmt.close();
 		           
-		           nro_prestamo++;
+		        
 		 }catch(SQLException e) {
 			 
 		 }

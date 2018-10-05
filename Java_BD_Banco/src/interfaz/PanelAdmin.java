@@ -25,20 +25,24 @@ import javax.swing.table.DefaultTableModel;
 
 import Banco.ConsultaATM;
 import Banco.ConsultaAdmin;
+import quick.dbtable.DBTable;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
+import javax.swing.JTextArea;
 
 public class PanelAdmin extends JPanel {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTable tableConsulta;
+	private DBTable tableConsulta;
 	private JList<String> listNombreTablas;
 	private JList<String> listAtributosTabla;
 	
 	private ConsultaAdmin consu; 
+	private JButton btnBorrar;
+	private JTextArea textArea;
 
 	/**
 	 * Create the panel.
@@ -46,6 +50,9 @@ public class PanelAdmin extends JPanel {
 	public PanelAdmin() {
 		consu = null;
 		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.rowHeights = new int[]{58, 46, 92, 86};
+		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 0.0, 0.0};
+		gridBagLayout.columnWeights = new double[]{1.0, 0.0};
 		setLayout(gridBagLayout);
 		setBackground(Interfaz.primaryLight);
 		
@@ -54,6 +61,21 @@ public class PanelAdmin extends JPanel {
 		panelBotones.setBorder(new TitledBorder(new LineBorder(Interfaz.textColor), "Opciones", TitledBorder.CENTER, TitledBorder.TOP, null, Interfaz.textColor));
 		panelBotones.setBackground(Interfaz.primaryLight);
 		panelBotones.setForeground(Interfaz.textColor);
+		
+		textArea = new JTextArea();
+		GridBagConstraints gbc_textArea = new GridBagConstraints();
+		gbc_textArea.insets = new Insets(0, 0, 5, 5);
+		gbc_textArea.fill = GridBagConstraints.BOTH;
+		gbc_textArea.gridx = 0;
+		gbc_textArea.gridy = 1;
+		add(textArea, gbc_textArea);
+		
+		btnBorrar = FabBoton.construirBoton("Borrar");//new JButton("Borrar");
+		GridBagConstraints gbc_btnBorrar = new GridBagConstraints();
+		gbc_btnBorrar.insets = new Insets(0, 0, 5, 0);
+		gbc_btnBorrar.gridx = 1;
+		gbc_btnBorrar.gridy = 1;
+		add(btnBorrar, gbc_btnBorrar);
 		
 		listNombreTablas = new JList<String>();
 		listNombreTablas.setBorder(new TitledBorder(new LineBorder(Interfaz.textColor), "Nombre de las Tablas", TitledBorder.LEADING, TitledBorder.TOP, null, Interfaz.textColor));
@@ -67,7 +89,7 @@ public class PanelAdmin extends JPanel {
 		gbc_listNombreTablas.weightx = 40;
 		gbc_listNombreTablas.weighty = 50;
 		gbc_listNombreTablas.gridx = 1;
-		gbc_listNombreTablas.gridy = 1;
+		gbc_listNombreTablas.gridy = 2;
 		
 		
 		
@@ -79,14 +101,13 @@ public class PanelAdmin extends JPanel {
 		listAtributosTabla.setBackground(Interfaz.fondo);
 		listAtributosTabla.setForeground(Interfaz.textColor);
 		GridBagConstraints gbc_listAtributosTabla = new GridBagConstraints();
-		gbc_listAtributosTabla.insets = new Insets(0, 0, 5, 0);
 		gbc_listAtributosTabla.fill = GridBagConstraints.BOTH;
 		gbc_listAtributosTabla.gridheight = 1;
 		gbc_listAtributosTabla.gridwidth = 1;
 		gbc_listAtributosTabla.weightx = 40;
 		gbc_listAtributosTabla.weighty = 50;
 		gbc_listAtributosTabla.gridx = 1;
-		gbc_listAtributosTabla.gridy = 2;
+		gbc_listAtributosTabla.gridy = 3;
 		add(new JScrollPane(listAtributosTabla), gbc_listAtributosTabla);
 		
 		
@@ -106,12 +127,13 @@ listNombreTablas.addListSelectionListener(new ListSelectionListener() {
 		
 		
 		GridBagConstraints gbc_panelBotones = new GridBagConstraints();
+		gbc_panelBotones.anchor = GridBagConstraints.NORTH;
+		gbc_panelBotones.insets = new Insets(0, 0, 5, 5);
 		gbc_panelBotones.gridx = 0;
 		gbc_panelBotones.gridy = 0;
-		gbc_panelBotones.weightx = 100;
-		gbc_panelBotones.weighty = 5;
-		gbc_panelBotones.gridheight = 1;
-		gbc_panelBotones.fill = GridBagConstraints.BOTH;
+		gbc_panelBotones.weightx = 150.0;
+		gbc_panelBotones.weighty = 6.0;
+		gbc_panelBotones.fill = GridBagConstraints.HORIZONTAL;
 		add(panelBotones, gbc_panelBotones);
 		
 			JButton botonConsulta = FabBoton.construirBoton("Realizar Consulta");
@@ -158,27 +180,28 @@ listNombreTablas.addListSelectionListener(new ListSelectionListener() {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
 					
+					consu.consultaAdmin(tableConsulta, textArea.getText());
 				}
 			});
 			panelBotones.add(botonConsulta);
 		add(panelBotones, gbc_panelBotones);	
 		
 		
-		tableConsulta = new JTable();
+		tableConsulta =  new DBTable();
+		tableConsulta.setEditable(false);
 		tableConsulta.setBorder(new TitledBorder(new LineBorder(Interfaz.textColor), "Consulta", TitledBorder.CENTER, TitledBorder.TOP, null, Interfaz.textColor));
 		tableConsulta.setBackground(Interfaz.fondo);
 		tableConsulta.setForeground(Interfaz.textColor);
 		GridBagConstraints gbc_tableConsulta = new GridBagConstraints();
-		gbc_tableConsulta.insets = new Insets(0, 0, 5, 0);
+		gbc_tableConsulta.insets = new Insets(0, 0, 0, 5);
 		gbc_tableConsulta.fill = GridBagConstraints.BOTH;
 		gbc_tableConsulta.gridheight = 2;
 		gbc_tableConsulta.gridwidth = 1;
 		gbc_tableConsulta.weightx = 60;
 		gbc_tableConsulta.weighty = 100;
 		gbc_tableConsulta.gridx = 0;
-		gbc_tableConsulta.gridy = 1;
+		gbc_tableConsulta.gridy = 2;
 		add(tableConsulta, gbc_tableConsulta);
 		
 		

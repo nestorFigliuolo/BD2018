@@ -20,12 +20,15 @@ import javax.swing.border.TitledBorder;
 
 
 import Banco.ConsultaAdminPrestamo;
+import javax.swing.JLabel;
 
 public class PanelAdminPrestamos extends JPanel {
 	
 	private JTable tableConsulta;
 	private JTable tableMorosos;
 	private ConsultaAdminPrestamo consu;
+	private JLabel lblNewLabel;
+	private JLabel lblClientesMorosos;
 
 	/**
 	 * Create the panel.
@@ -43,6 +46,7 @@ public class PanelAdminPrestamos extends JPanel {
 		panelBotones.setForeground(Interfaz.textColor);
 		
 		GridBagConstraints gbc_panelBotones = new GridBagConstraints();
+		gbc_panelBotones.insets = new Insets(0, 0, 5, 0);
 		gbc_panelBotones.gridx = 0;
 		gbc_panelBotones.gridy = 0;
 		gbc_panelBotones.gridwidth = 2;
@@ -52,7 +56,7 @@ public class PanelAdminPrestamos extends JPanel {
 		add(panelBotones, gbc_panelBotones);
 		
 			JButton botonPrestamo = FabBoton.construirBoton("Crear prestamo");
-			JButton botonConsultarCliente = FabBoton.construirBoton("Consultar Cliente");
+			//JButton botonConsultarCliente = FabBoton.construirBoton("Consultar Cliente");
 			JButton botonPagarCuotas = FabBoton.construirBoton("Pagar Cuotas seleccionadas");
 			
 			JButton botonLogin = FabBoton.construirBoton("Login");
@@ -77,19 +81,13 @@ public class PanelAdminPrestamos extends JPanel {
 							if(consu.existeEmpleado()) {
 								
 					           verificar = true;
-				             //  botonPrestamo.setEnabled(true);
-				            //   botonConsultarCliente.setEnabled(true);
-				            //   botonPagarCuotas.setEnabled(true);
 				               JOptionPane.showMessageDialog(null, "Login Exitoso","Admin Prestamos",JOptionPane.PLAIN_MESSAGE,null);
 							   consu.tablaClientesMorosos(tableMorosos);
-							   consu.showAllClient(tableConsulta,botonPrestamo);
+							   consu.showAllClient(tableConsulta,botonPrestamo,botonPagarCuotas);
 							}
 							else {
 								
 				        	   JOptionPane.showMessageDialog(null, "Legajoo y/o Password incorrecta, ingresela nuevamente","Error Login", JOptionPane.ERROR_MESSAGE, null);
-				        	   botonPrestamo.setEnabled(false);
-				               botonConsultarCliente.setEnabled(false);
-				               botonPagarCuotas.setEnabled(false);
 							}
 						}
 						else 
@@ -110,18 +108,8 @@ public class PanelAdminPrestamos extends JPanel {
 					JTextField fieldTipo = new JTextField();
 					JTextField fieldNro = new JTextField();
 					
-					Object[] message = {
-							"TIPO_DOC:", fieldTipo,
-							"NRO_DOC:", fieldNro
-					};
+		           int option = bucarCliente(fieldTipo, fieldNro);
 					
-					int fila = tableConsulta.getSelectedRow();
-					
-					fieldTipo.setText(""+tableConsulta.getValueAt(fila, 2));
-					fieldNro.setText(""+tableConsulta.getValueAt(fila, 3));
-					
-					int option = JOptionPane.showConfirmDialog(null, message, "Buscar Cliente", JOptionPane.OK_CANCEL_OPTION);	
-		
 					
 					registrarPrestamo(option,fieldNro.getText());
 					
@@ -130,7 +118,7 @@ public class PanelAdminPrestamos extends JPanel {
 			panelBotones.add(botonPrestamo);
 			
 			
-			botonConsultarCliente.setEnabled(false);
+		/*	botonConsultarCliente.setEnabled(false);
 			botonConsultarCliente.addActionListener(new ActionListener() {
 				
 				@Override
@@ -140,18 +128,56 @@ public class PanelAdminPrestamos extends JPanel {
 				}
 			});
 			panelBotones.add(botonConsultarCliente);
-			
+			*/
 			
 			botonPagarCuotas.setEnabled(false);
 			botonPagarCuotas.addActionListener(new ActionListener() {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
 					
+					JTextField fieldTipo = new JTextField();
+					JTextField fieldNro = new JTextField();
+					
+		           int option = bucarCliente(fieldTipo, fieldNro);
+		           
+		           JTable tabla = new JTable();
+		           consu.pagarCuotas(fieldNro.getText(), tabla);
+		           
+		          int x = JOptionPane.showConfirmDialog(null,new JScrollPane(tabla), "Cuotas a pagar", JOptionPane.OK_CANCEL_OPTION);	
+		           
+				   if(x == JOptionPane.OK_OPTION) {
+					   int [] seleccionados = tabla.getSelectedRows();
+					   String pagos ="";
+					  
+					   for (int i = 0; i <seleccionados.length;i++) { 
+						 
+					      consu.establecerCuotaPagada(""+tabla.getValueAt(seleccionados[i], 0),""+tabla.getValueAt(seleccionados[i], 1));
+   					        pagos+= " "+tabla.getValueAt(seleccionados[i], 1);
+					   }
+					     
+					      
+					      
+					      JOptionPane.showMessageDialog(null, "Nro_Pagos"+pagos+" Pagados","Pagos",JOptionPane.PLAIN_MESSAGE,null);
+					   
+				   }
 				}
 			});
 			panelBotones.add(botonPagarCuotas);
+		
+		lblNewLabel = new JLabel("Todos los Clientes ");
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel.gridx = 0;
+		gbc_lblNewLabel.gridy = 1;
+		add(lblNewLabel, gbc_lblNewLabel);
+		
+		lblClientesMorosos = new JLabel("Clientes Morosos");
+		GridBagConstraints gbc_lblClientesMorosos = new GridBagConstraints();
+		gbc_lblClientesMorosos.insets = new Insets(0, 0, 5, 0);
+		gbc_lblClientesMorosos.gridx = 1;
+		gbc_lblClientesMorosos.gridy = 1;
+		add(lblClientesMorosos, gbc_lblClientesMorosos);
 			
 		
 		
@@ -161,12 +187,12 @@ public class PanelAdminPrestamos extends JPanel {
 		tableConsulta.setForeground(Interfaz.textColor);
 		tableConsulta.setAutoCreateRowSorter(true);
 		GridBagConstraints gbc_tableConsulta = new GridBagConstraints();
-		gbc_tableConsulta.insets = new Insets(0, 0, 5, 0);
+		gbc_tableConsulta.insets = new Insets(0, 0, 0, 5);
 		gbc_tableConsulta.fill = GridBagConstraints.BOTH;
 		gbc_tableConsulta.weightx = 50;
 		gbc_tableConsulta.weighty = 95;
 		gbc_tableConsulta.gridx = 0;
-		gbc_tableConsulta.gridy = 1;
+		gbc_tableConsulta.gridy = 2;
 		add(new JScrollPane(tableConsulta), gbc_tableConsulta);
 		
 		tableMorosos = new JTable();
@@ -176,16 +202,32 @@ public class PanelAdminPrestamos extends JPanel {
 		tableMorosos.setAutoCreateRowSorter(true);
 		tableMorosos.setEnabled(false);
 		GridBagConstraints gbc_tableMorosos = new GridBagConstraints();
-		gbc_tableMorosos.insets = new Insets(0, 0, 5, 0);
 		gbc_tableMorosos.fill = GridBagConstraints.BOTH;
 		gbc_tableMorosos.weightx = 50;
 		gbc_tableMorosos.weighty = 95;
 		gbc_tableMorosos.gridx = 1;
-		gbc_tableMorosos.gridy = 1;
+		gbc_tableMorosos.gridy = 2;
 		add(new JScrollPane(tableMorosos), gbc_tableMorosos);
 		
 	}
 
+	
+	private int bucarCliente(JTextField t1,JTextField t2) {
+	
+		Object[] message = {
+				"TIPO_DOC:",t1,
+				"NRO_DOC:", t2
+		};
+		
+		int fila = tableConsulta.getSelectedRow();
+		
+		t1.setText(""+tableConsulta.getValueAt(fila, 2));
+		t2.setText(""+tableConsulta.getValueAt(fila, 3));
+		
+		int option = JOptionPane.showConfirmDialog(null, message, "Buscar Cliente", JOptionPane.OK_CANCEL_OPTION);	
+		
+		return option;
+	}
 	
 	private void registrarPrestamo(int op,String nro_doc) {
 		
@@ -206,7 +248,6 @@ public class PanelAdminPrestamos extends JPanel {
 											            if(Double.parseDouble(monto)<30000) {
 															String tasa = consu.getTazaInteres(cant_meses, monto);
 															String nro_cliente = consu.getNumeroCliente(nro_doc);
-															
 															consu.crearPrestamo(cant_meses, monto, tasa,nro_cliente);
 															 JOptionPane.showMessageDialog(null, "Prestamo Creado","Prestamo",JOptionPane.PLAIN_MESSAGE,null);
 											            	
