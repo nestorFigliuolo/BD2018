@@ -8,8 +8,10 @@ import java.sql.Types;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListDataListener;
 import javax.swing.table.DefaultTableModel;
 
@@ -37,10 +39,10 @@ public class ConsultaAdmin {
 		
 		coneAdmin.conectarBD(tabla);
 		
-		
-		
 		try
 	    { 
+			
+		
 		tabla.setSelectSql(sentencia);
 		tabla.createColumnModelFromQuery(); 
 		
@@ -59,6 +61,7 @@ public class ConsultaAdmin {
 	     }  
 		
 		 tabla.refresh();
+	    
 	    }
 	    catch (SQLException ex)
 	    {
@@ -66,12 +69,35 @@ public class ConsultaAdmin {
 	       System.out.println("SQLException: " + ex.getMessage());
 	       System.out.println("SQLState: " + ex.getSQLState());
 	       System.out.println("VendorError: " + ex.getErrorCode());
-	      
+	       JOptionPane.showMessageDialog(null,
+                   ex.getMessage() + "\n", 
+                   "Error al ejecutar la sentencia SQL.",
+                   JOptionPane.ERROR_MESSAGE);
 	    }	
 		
 		
 	}
 
+	
+	public void abmAdmin(String sentencia) {
+	
+		try {
+		Statement stmt = this.conexionBD.createStatement();
+		  
+		stmt.execute(sentencia);
+		
+		}catch(SQLException ex) {
+			// en caso de error, se muestra la causa en la consola
+		       System.out.println("SQLException: " + ex.getMessage());
+		       System.out.println("SQLState: " + ex.getSQLState());
+		       System.out.println("VendorError: " + ex.getErrorCode());
+		       JOptionPane.showMessageDialog(null,
+	                   ex.getMessage() + "\n", 
+	                   "Error al ejecutar la sentencia SQL.",
+	                   JOptionPane.ERROR_MESSAGE);
+			
+		}
+	}
 
 	public void mostrarTablas(JList<String> lista){
 		try {
