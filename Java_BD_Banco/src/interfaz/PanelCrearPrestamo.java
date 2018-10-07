@@ -9,7 +9,7 @@ import java.awt.Font;
 import java.awt.Color;
 
 public class PanelCrearPrestamo extends JPanel {
-	
+	private static final long serialVersionUID = 1L;
 	private JTextField textFieldMonto;
 	private JComboBox<String> comboBoxMeses;
 	

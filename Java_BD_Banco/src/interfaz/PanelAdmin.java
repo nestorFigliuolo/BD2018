@@ -6,28 +6,23 @@ import javax.swing.JPasswordField;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JButton;
-import javax.swing.JTable;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
 
-import Banco.ConsultaATM;
 import Banco.ConsultaAdmin;
 import quick.dbtable.DBTable;
 
-import java.awt.Color;
 import java.awt.FlowLayout;
 import javax.swing.JTextArea;
 
@@ -146,15 +141,27 @@ listNombreTablas.addListSelectionListener(new ListSelectionListener() {
 			JButton botonConsulta = FabBoton.construirBoton("Realizar Consulta");
 		
 			botonABM = FabBoton.construirBoton("Realizar [ABM]");
+			botonABM.setEnabled(false);
 			
 			botonABM.addActionListener(new ActionListener() {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					try {
+							consu.abmAdmin(textArea.getText());
+							 JOptionPane.showMessageDialog(null, "Ejecucion exitosa","[ABM]",JOptionPane.PLAIN_MESSAGE,null);
 					
-					consu.abmAdmin(textArea.getText());
-					 JOptionPane.showMessageDialog(null, "Ejecucion exitosa","[ABM]",JOptionPane.PLAIN_MESSAGE,null);
-					
+					}catch(SQLException ex) {
+						// en caso de error, se muestra la causa en la consola
+					       System.out.println("SQLException: " + ex.getMessage());
+					       System.out.println("SQLState: " + ex.getSQLState());
+					       System.out.println("VendorError: " + ex.getErrorCode());
+					       JOptionPane.showMessageDialog(null,
+				                   ex.getMessage() + "\n", 
+				                   "Error al ejecutar la sentencia SQL.",
+				                   JOptionPane.ERROR_MESSAGE);
+						
+					}
 					
 				}
 			});
@@ -168,7 +175,7 @@ listNombreTablas.addListSelectionListener(new ListSelectionListener() {
 					boolean verificar = false;
 					JPasswordField fieldPass = new JPasswordField();
 					Object[] message = {
-							"Contraseña:", fieldPass
+							"Password:", fieldPass
 					};
 					while (!verificar) {	
 						int option = JOptionPane.showConfirmDialog(null, message, "Ingrese Numero y PIN", JOptionPane.OK_CANCEL_OPTION);
@@ -179,6 +186,7 @@ listNombreTablas.addListSelectionListener(new ListSelectionListener() {
 					           verificar = true;
 					           consu = new ConsultaAdmin();
 				               botonConsulta.setEnabled(true);
+				               botonABM.setEnabled(true);
 				               JOptionPane.showMessageDialog(null, "Login Exitoso","Admin",JOptionPane.PLAIN_MESSAGE,null);
 							  
 				              consu.mostrarTablas(listNombreTablas);  

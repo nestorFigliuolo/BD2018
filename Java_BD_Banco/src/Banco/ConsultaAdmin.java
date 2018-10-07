@@ -9,13 +9,7 @@ import java.sql.Types;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.ListModel;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ListDataListener;
-import javax.swing.table.DefaultTableModel;
 
-import com.sun.prism.ResourceFactoryListener;
 
 import quick.dbtable.DBTable;
 
@@ -79,24 +73,14 @@ public class ConsultaAdmin {
 	}
 
 	
-	public void abmAdmin(String sentencia) {
+	public void abmAdmin(String sentencia) throws SQLException {
 	
-		try {
+		
 		Statement stmt = this.conexionBD.createStatement();
 		  
 		stmt.execute(sentencia);
 		
-		}catch(SQLException ex) {
-			// en caso de error, se muestra la causa en la consola
-		       System.out.println("SQLException: " + ex.getMessage());
-		       System.out.println("SQLState: " + ex.getSQLState());
-		       System.out.println("VendorError: " + ex.getErrorCode());
-		       JOptionPane.showMessageDialog(null,
-	                   ex.getMessage() + "\n", 
-	                   "Error al ejecutar la sentencia SQL.",
-	                   JOptionPane.ERROR_MESSAGE);
-			
-		}
+
 	}
 
 	public void mostrarTablas(JList<String> lista){

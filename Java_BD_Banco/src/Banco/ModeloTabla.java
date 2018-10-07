@@ -5,7 +5,12 @@ import javax.swing.table.DefaultTableModel;
 public class ModeloTabla extends DefaultTableModel {
 
 	
-	 public ModeloTabla(Object[][]data,Object []col) {
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public ModeloTabla(Object[][]data,Object []col) {
 		 
 		 super(data,col);
 	 }

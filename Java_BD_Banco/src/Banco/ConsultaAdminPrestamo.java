@@ -5,14 +5,13 @@ import java.awt.event.MouseListener;
 import java.sql.*;
 
 import javax.swing.JButton;
-import javax.swing.JList;
+
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
+
 import javax.swing.table.DefaultTableModel;
 
-import com.mysql.cj.xdevapi.Statement;
+
 
 public class ConsultaAdminPrestamo {
 
@@ -112,16 +111,17 @@ public class ConsultaAdminPrestamo {
 		
 		try {
 			 stmt = conexionBD.createStatement();
+			  
 			 String sql = "UPDATE pago " +
-                     "SET fecha_pago = curdate() "+
-                     "WHERE nro_prestamo = "+nro_prestamo
+                     "SET fecha_pago = curdate()"
+                     +" WHERE nro_prestamo = "+nro_prestamo
                      +" and nro_pago = "+nro_pago;
 			 
 			 stmt.execute(sql);
 			 
 			
 		}catch(SQLException e) {
-			
+			System.out.println(e.getMessage());
 		}
 		
 	}
@@ -149,7 +149,7 @@ public class ConsultaAdminPrestamo {
 				       	 modelo.setValueAt(rs.getString(1), fil, 0);
 				       	 modelo.setValueAt(rs.getString(2), fil, 1);
 				       	 modelo.setValueAt(rs.getString(3), fil, 2);     
-				  	     modelo.setValueAt(rs.getString(4), fil, 3);
+				  	     modelo.setValueAt(Fechas.convertirDateAString(rs.getDate(4)), fil, 3);
 				      
 				  	        fil++;
 				       }
@@ -389,6 +389,7 @@ public class ConsultaAdminPrestamo {
 		
 		return null;
 	}
+ 	
 	
 	
 }

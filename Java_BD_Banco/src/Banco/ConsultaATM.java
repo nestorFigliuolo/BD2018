@@ -90,7 +90,7 @@ public class ConsultaATM {
 		
 	}
 	
-	public void MovimientoPorPeriodo(JTable tabla,String fechaMenor,String fechaMayor) {
+	public void MovimientoPorPeriodo(JTable tabla,java.sql.Date fechaMenor,java.sql.Date fechaMayor) {
 		
 		// se prepara el string SQL de la consulta
 	    String SQL = "select fecha,hora,tipo,monto,cod_caja,destino from tarjeta,trans_cajas_ahorro "
@@ -120,11 +120,12 @@ private DefaultTableModel getUltMovimientModel(String SQL) {
        String col [] = {"Fecha","Hora","Tipo","Monto","Codigo_caja","Caja_Ahorro_Destino"};
        DefaultTableModel modelo = new DefaultTableModel(data, col);
        
+       
      
        int fil = 0;
        while( rs.next() && fil<15)
        {    modelo.insertRow(fil, new Object[]{});
-       	 modelo.setValueAt(rs.getString(1), fil, 0);
+       	 modelo.setValueAt(Fechas.convertirDateAString(rs.getDate(1)), fil, 0);
        	 modelo.setValueAt(rs.getString(2), fil, 1);
        	 modelo.setValueAt(rs.getString(3), fil, 2);
        	 if(rs.getString(3).equals("Deposito"))

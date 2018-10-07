@@ -4,7 +4,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -24,6 +23,7 @@ import javax.swing.JLabel;
 
 public class PanelAdminPrestamos extends JPanel {
 	
+	private static final long serialVersionUID = 1L;
 	private JTable tableConsulta;
 	private JTable tableMorosos;
 	private ConsultaAdminPrestamo consu;
@@ -56,7 +56,7 @@ public class PanelAdminPrestamos extends JPanel {
 		add(panelBotones, gbc_panelBotones);
 		
 			JButton botonPrestamo = FabBoton.construirBoton("Crear prestamo");
-			//JButton botonConsultarCliente = FabBoton.construirBoton("Consultar Cliente");
+			
 			JButton botonPagarCuotas = FabBoton.construirBoton("Pagar Cuotas seleccionadas");
 			
 			JButton botonLogin = FabBoton.construirBoton("Login");
@@ -64,6 +64,8 @@ public class PanelAdminPrestamos extends JPanel {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					
+					
 					boolean verificar = false;
 					JTextField fieldLegajo = new JTextField();
 					JPasswordField fieldPass = new JPasswordField();
@@ -77,6 +79,7 @@ public class PanelAdminPrestamos extends JPanel {
 							String legajo = fieldLegajo.getText();
 							String pass  = new String(fieldPass.getPassword());
 							consu = new ConsultaAdminPrestamo(legajo, pass);
+						
 						
 							if(consu.existeEmpleado()) {
 								
@@ -110,25 +113,12 @@ public class PanelAdminPrestamos extends JPanel {
 					
 		           int option = bucarCliente(fieldTipo, fieldNro);
 					
-					
 					registrarPrestamo(option,fieldNro.getText());
 					
 				}
 			});
 			panelBotones.add(botonPrestamo);
 			
-			
-		/*	botonConsultarCliente.setEnabled(false);
-			botonConsultarCliente.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
-			panelBotones.add(botonConsultarCliente);
-			*/
 			
 			botonPagarCuotas.setEnabled(false);
 			botonPagarCuotas.addActionListener(new ActionListener() {
@@ -139,7 +129,7 @@ public class PanelAdminPrestamos extends JPanel {
 					JTextField fieldTipo = new JTextField();
 					JTextField fieldNro = new JTextField();
 					
-		           int option = bucarCliente(fieldTipo, fieldNro);
+		            bucarCliente(fieldTipo, fieldNro);
 		           
 		           JTable tabla = new JTable();
 		           consu.pagarCuotas(fieldNro.getText(), tabla);
@@ -160,6 +150,7 @@ public class PanelAdminPrestamos extends JPanel {
 					      
 					      JOptionPane.showMessageDialog(null, "Nro_Pagos"+pagos+" Pagados","Pagos",JOptionPane.PLAIN_MESSAGE,null);
 					   
+					      consu.tablaClientesMorosos(tableMorosos);
 				   }
 				}
 			});
@@ -182,7 +173,6 @@ public class PanelAdminPrestamos extends JPanel {
 		
 		
 		tableConsulta = new JTable();
-		//tableConsulta.setBorder(new TitledBorder(new LineBorder(Interfaz.textColor), "Consulta", TitledBorder.CENTER, TitledBorder.TOP, null, Interfaz.textColor));
 		tableConsulta.setBackground(Interfaz.fondo);
 		tableConsulta.setForeground(Interfaz.textColor);
 		tableConsulta.setAutoCreateRowSorter(true);
@@ -196,7 +186,7 @@ public class PanelAdminPrestamos extends JPanel {
 		add(new JScrollPane(tableConsulta), gbc_tableConsulta);
 		
 		tableMorosos = new JTable();
-		//tableMorosos.setBorder(new TitledBorder(new LineBorder(Interfaz.textColor), "Morosos", TitledBorder.CENTER, TitledBorder.TOP, null, Interfaz.textColor));
+		
 		tableMorosos.setBackground(Interfaz.fondo);
 		tableMorosos.setForeground(Interfaz.textColor);
 		tableMorosos.setAutoCreateRowSorter(true);

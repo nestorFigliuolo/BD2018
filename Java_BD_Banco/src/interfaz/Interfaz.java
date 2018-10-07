@@ -9,21 +9,16 @@ import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.JButton;
-import java.awt.FlowLayout;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import java.awt.Component;
-import java.awt.Dimension;
+
+import javax.swing.JButton;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import javax.swing.JTable;
+
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JList;
 
 public class Interfaz {
 

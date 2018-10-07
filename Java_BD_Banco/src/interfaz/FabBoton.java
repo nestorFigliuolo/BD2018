@@ -1,8 +1,6 @@
 package interfaz;
 
-import java.awt.Color;
 import java.awt.Insets;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 

@@ -1,45 +1,38 @@
 package interfaz;
 
-import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Hashtable;
+
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
+import javax.swing.JFormattedTextField;
+
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
+
+import javax.swing.text.MaskFormatter;
 
 import Banco.ConsultaATM;
+import Banco.Fechas;
 
 public class PanelATM extends JPanel {
-	
+	private static final long serialVersionUID = 1L;
 	private JPanel panelBotones;
 	private JTable tableConsulta;
 	//obejeto que utiliza ATM para las consultas
 	
 	private ConsultaATM consul;
 	
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
-	private SimpleDateFormat sqldateFormat = new SimpleDateFormat("yyyymmdd");
 	/**
 	 * Create the panel.
 	 */
@@ -100,8 +93,11 @@ public class PanelATM extends JPanel {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					JTextField textFieldFechaInicio = new JTextField();
-					JTextField textFieldFechaFin = new JTextField();
+					try {
+					JFormattedTextField textFieldFechaInicio = new JFormattedTextField(new MaskFormatter("##'/##'/####"));
+					JFormattedTextField textFieldFechaFin = new JFormattedTextField(new MaskFormatter("##'/##'/####"));;
+					
+					
 					Object[] message = {
 							"El formato de la fecha debe ser dd/mm/yyyy",
 							"Fecha inicial:", textFieldFechaInicio,
@@ -111,18 +107,28 @@ public class PanelATM extends JPanel {
 					int option = JOptionPane.showConfirmDialog(null, message, "Ingrese periodo", JOptionPane.OK_CANCEL_OPTION);
 					if (option == JOptionPane.OK_OPTION) {
 					    
-					    try {
-					    	String fechaInit = sqldateFormat.format(dateFormat.parse(textFieldFechaInicio.getText()));
-							String fechaFin = sqldateFormat.format(dateFormat.parse(textFieldFechaFin.getText()));
-							consul.MovimientoPorPeriodo(tableConsulta, fechaInit,fechaFin);
-						} catch (ParseException e1) {
-							JOptionPane.showMessageDialog(null, "El formato de fecha debe ser dia/mes/año", "Error", JOptionPane.ERROR_MESSAGE);
-							e1.printStackTrace();
-						}
+					    
+					     java.sql.Date fechaInt = Fechas.convertirStringADateSQL(textFieldFechaInicio.getText().trim());
+					     java.sql.Date fechaFin = Fechas.convertirStringADateSQL(textFieldFechaFin.getText().trim());
+						
+					     boolean fechaIn = Fechas.validar(Fechas.convertirDateAString(fechaInt));
+					     boolean fechaFi = Fechas.validar(Fechas.convertirDateAString(fechaFin));
+					     
+					     if(fechaIn && fechaFi)
+					    	 consul.MovimientoPorPeriodo(tableConsulta, fechaInt,fechaFin);
+					     else {
+					    	 JOptionPane.showMessageDialog(null, "Fecha mal ingresada,el formato de fecha debe ser dia/mes/anio", "Error", JOptionPane.ERROR_MESSAGE); 
+					     }
+					     
+						
 					} 
 					
 					
+				}catch(Exception ex) {	
+					JOptionPane.showMessageDialog(null, "Fecha mal ingresada,el formato de fecha debe ser dia/mes/anio", "Error", JOptionPane.ERROR_MESSAGE);
 				}
+			}
+				
 			});
 			panelBotones.add(botonMovimientoPeriodo);
 			
