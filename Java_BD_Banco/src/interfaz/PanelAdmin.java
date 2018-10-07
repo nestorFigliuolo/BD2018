@@ -78,9 +78,7 @@ public class PanelAdmin extends JPanel {
 		textArea.addFocusListener(new FocusListener() {
 			
 			@Override
-			public void focusLost(FocusEvent e) {
-				textArea.setText("Poner aqui sentencia SQL");
-				
+			public void focusLost(FocusEvent e) {				
 			}
 			
 			@Override
@@ -132,17 +130,17 @@ public class PanelAdmin extends JPanel {
 		
 		listNombreTablas.addListSelectionListener(new ListSelectionListener() {
 					
-					@Override
-					public void valueChanged(ListSelectionEvent e) {
-						
-						if (consu!=null) {
-							
-							String nombreTabla = listNombreTablas.getSelectedValue();
-							
-							consu.nombreAtributosTabla(listAtributosTabla, nombreTabla);
-						}
-					}
-				});
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+			
+			if (consu!=null) {
+				
+				String nombreTabla = listNombreTablas.getSelectedValue();
+				
+				consu.nombreAtributosTabla(listAtributosTabla, nombreTabla);
+			}
+		}
+		});
 		
 		
 		GridBagConstraints gbc_panelBotones = new GridBagConstraints();
@@ -227,7 +225,7 @@ public class PanelAdmin extends JPanel {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
+					System.out.println(textArea.getText());
 					consu.consultaAdmin(tableConsulta, textArea.getText());
 				}
 			});
