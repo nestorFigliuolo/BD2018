@@ -12,6 +12,8 @@ import javax.swing.JOptionPane;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.sql.SQLException;
 
 import javax.swing.JScrollPane;
@@ -72,7 +74,21 @@ public class PanelAdmin extends JPanel {
 		
 		
 		textArea = new JTextArea();
-		textArea.setText("Poner aqui sentencia SQL (borrar esto)");
+		textArea.setText("Poner aqui sentencia SQL");
+		textArea.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+				textArea.setText("Poner aqui sentencia SQL");
+				
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				textArea.setText("");
+				
+			}
+		});
 		GridBagConstraints gbc_textArea = new GridBagConstraints();
 		gbc_textArea.insets = new Insets(0, 0, 5, 5);
 		gbc_textArea.fill = GridBagConstraints.BOTH;
@@ -114,19 +130,19 @@ public class PanelAdmin extends JPanel {
 		add(new JScrollPane(listAtributosTabla), gbc_listAtributosTabla);
 		
 		
-listNombreTablas.addListSelectionListener(new ListSelectionListener() {
-			
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				
-				if (consu!=null) {
+		listNombreTablas.addListSelectionListener(new ListSelectionListener() {
 					
-					String nombreTabla = listNombreTablas.getSelectedValue();
-					
-					consu.nombreAtributosTabla(listAtributosTabla, nombreTabla);
-				}
-			}
-		});
+					@Override
+					public void valueChanged(ListSelectionEvent e) {
+						
+						if (consu!=null) {
+							
+							String nombreTabla = listNombreTablas.getSelectedValue();
+							
+							consu.nombreAtributosTabla(listAtributosTabla, nombreTabla);
+						}
+					}
+				});
 		
 		
 		GridBagConstraints gbc_panelBotones = new GridBagConstraints();
