@@ -72,6 +72,7 @@ public class PanelAdmin extends JPanel {
 		
 		
 		textArea = new JTextArea();
+		textArea.setText("Poner aqui sentencia SQL (borrar esto)");
 		GridBagConstraints gbc_textArea = new GridBagConstraints();
 		gbc_textArea.insets = new Insets(0, 0, 5, 5);
 		gbc_textArea.fill = GridBagConstraints.BOTH;
