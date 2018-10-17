@@ -390,6 +390,28 @@ public class ConsultaAdminPrestamo {
 		return null;
 	}
  	
+ 	
+ 	//Retorna un String con la fecha actual 
+ 	public String getFecha() {
+		try {
+		Statement stmt = this.conexionBD.createStatement();
+	     String SQL = "select curdate()";
+	     ResultSet rs = stmt.executeQuery(SQL);
+	     
+	     rs.next();
+	     
+	     String r = rs.getString("curdate()");
+	     
+	     return r;
+		
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return null;
+	}
+ 	
+ 	
 	
 	
 }

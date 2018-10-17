@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/makaan/BD2018/quicktable-3.0.jar"/>
-	<classpathentry kind="lib" path="/home/makaan/BD2018/mysql-connector-java-8.0.12.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lautaro/Desktop/BD2018/mysql-connector-java-8.0.12.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lautaro/Desktop/BD2018/quicktable-3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
