@@ -507,18 +507,6 @@ GRANT UPDATE ON banco.Tarjeta TO 'atm'@'%';
 ###########################Store procedures################################################
 ###########################################################################################
 
-/*delimiter !  # define “!” como delimitador
- create procedure p() 
- 	begin
- 	
-    SELECT * FROM trans_cajas_ahorro; 
-    
-    end; ! 
- 
- delimiter ; # reestablece el “;” como delimitador
-*/
-
-
 delimiter !
   
    create procedure transferencia(in monto DECIMAL(16,2),in nro_tarjeta BIGINT(16),in destino INT(8),in cod_caja INT(5)) 
@@ -592,3 +580,61 @@ delimiter !
 delimiter ;
 
 
+########################################################################################################3
+
+delimiter !
+
+create procedure Extraccion(in monto DECIMAL(16,2),in nro_tarjeta BIGINT(16),in cod_caja INT(5))
+	BEGIN
+          #Declaro variables que utilizo 
+            declare saldo_caja_origen DECIMAL(16,2);
+	        declare cliente INT(5);
+	        declare cajaOrigen INT(8);
+	       
+	        declare exit handler for sqlexception
+		         BEGIN # Si se produce una SQLEXCEPTION,  se retrocede la transacción con ROLLBACK 
+			         SELECT "SQLEXCEPTION!,  transacción abortada" AS resultado; 
+			         ROLLBACK; 
+		         END;
+
+            start transaction;#Inicio la transaccion de manera atomica 
+
+				     #Obtengo el numero de caja origen y cliente asociada a la tarjeta y los bloqueo
+		             #Se asume que el numero de tarjeta ingresado por parametro existe y es valido
+		                  SELECT nro_cliente,nro_ca INTO cliente,cajaOrigen 
+		                        FROM Tarjeta where Tarjeta.nro_tarjeta = nro_tarjeta for update;  
+
+                     #Obtengo el salgo actual de la caja origen y lo bloqueo
+		                   SELECT saldo INTO saldo_caja_origen from caja_ahorro where nro_ca = cajaOrigen for update;
+      
+                        IF saldo_caja_origen>=monto THEN
+                            
+                                  #Creo una nueva transaccion 
+							         INSERT INTO Transaccion (fecha,hora,monto) VALUES (curdate(),curtime(),monto);
+
+						          #Creo una nueva transaccion por caja  
+									 INSERT INTO Transaccion_por_caja VALUES (last_insert_id(),cod_caja);
+
+								  #Creo nueva extraccion para la caja 
+								     INSERT INTO Extraccion VALUES (last_insert_id(),cliente,cajaOrigen);
+
+                                  #Actualizo la caja decrementando el saldo 
+								     update Caja_Ahorro set saldo=saldo-monto 
+							           where Caja_Ahorro.nro_ca = cajaOrigen;
+ 
+
+                                     SELECT 'La transferencia se realizo con exito' AS resultado; 
+						ELSE
+						
+				    	       SELECT 'Saldo insuficiente para realizar la transferencia' AS resultado;
+			
+						END IF; 	 
+
+
+
+
+             commit;#cometo la transaccion para que los datos se guarden en la bd. 
+	END; !
+
+
+delimiter ;
