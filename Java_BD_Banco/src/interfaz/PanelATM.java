@@ -6,8 +6,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
-
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 
@@ -16,7 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-
+import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
@@ -24,6 +28,7 @@ import javax.swing.text.MaskFormatter;
 
 import Banco.ConsultaATM;
 import Banco.Fechas;
+import jdk.nashorn.internal.scripts.JO;
 
 public class PanelATM extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -59,10 +64,10 @@ public class PanelATM extends JPanel {
 		
 		
 		
-		
+			List<JButton> grupoBotones = new ArrayList();
 			
 			JButton botonConsultaSaldo = FabBoton.construirBoton("Consultar Saldo");
-			botonConsultaSaldo.setEnabled(false);
+			grupoBotones.add(botonConsultaSaldo);
 			botonConsultaSaldo.addActionListener(new ActionListener() {
 				
 				@Override
@@ -88,7 +93,7 @@ public class PanelATM extends JPanel {
 			panelBotones.add(botonUltimosMovimientos);
 			
 			JButton botonMovimientoPeriodo = FabBoton.construirBoton("Movimientos por Periodo");
-			botonMovimientoPeriodo.setEnabled(false);
+			grupoBotones.add(botonMovimientoPeriodo);
 			botonMovimientoPeriodo.addActionListener(new ActionListener() {
 				
 				@Override
@@ -132,6 +137,48 @@ public class PanelATM extends JPanel {
 			});
 			panelBotones.add(botonMovimientoPeriodo);
 			
+			JButton botonTransferencia = FabBoton.construirBoton("Realizar Transferencia");
+			grupoBotones.add(botonTransferencia);
+			botonTransferencia.addActionListener(new ActionListener() {
+				
+				JTextField textCajaAhorro = new JTextField();
+				JTextField textMonto = new JTextField();
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Object[] message = {
+							"Caja de Ahorro destino:", textCajaAhorro,
+							"Monto a transferir:", textMonto
+					};
+					int option = JOptionPane.showConfirmDialog(null, message, "Transferencia", JOptionPane.OK_CANCEL_OPTION);
+					if(option == JOptionPane.OK_OPTION) {
+						//Pone aca para hacer la transferencia
+					}
+					
+				}
+			});
+			panelBotones.add(botonTransferencia);
+			
+			JButton botonExtraccion = FabBoton.construirBoton("Realizar Extraccion");
+			grupoBotones.add(botonExtraccion);
+			botonExtraccion.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					
+					JTextField textoMonto = new JTextField();
+					Object[] message = {
+							"Monto a extraer:", textoMonto
+					};
+					int option = JOptionPane.showConfirmDialog(null, message, "Extraccion", JOptionPane.OK_CANCEL_OPTION);
+					if(option == JOptionPane.OK_OPTION) {
+						//Aca hacer lo de la extraccion
+					}
+					
+				}
+			});
+			panelBotones.add(botonExtraccion);
+			
+			
 			JButton botonLogin = FabBoton.construirBoton("Login");
 			botonLogin.addActionListener(new ActionListener() {
 				
@@ -154,16 +201,16 @@ public class PanelATM extends JPanel {
 							if(consul.existeTarjeta()) {
 								
 					           verificar = true;
-				               botonConsultaSaldo.setEnabled(true);
-				               botonUltimosMovimientos.setEnabled(true);
-				               botonMovimientoPeriodo.setEnabled(true);
+					           for(JButton boton: grupoBotones) {
+					        	   boton.setEnabled(true);
+					           }
 				               JOptionPane.showMessageDialog(null, "Login Exitoso","ATM",JOptionPane.PLAIN_MESSAGE,null);
 							}
 							else {
 				        	   JOptionPane.showMessageDialog(null, "Numero de tarjeta o PIN incorrecto ingrese nuevamente los datos","Error Login", JOptionPane.ERROR_MESSAGE, null);
-						       botonConsultaSaldo.setEnabled(false);
-				               botonUltimosMovimientos.setEnabled(false);
-				               botonMovimientoPeriodo.setEnabled(false);
+				        	   for(JButton boton: grupoBotones) {
+				        		   boton.setEnabled(false);
+				        	   }
 							}
 						}
 						else 
@@ -173,6 +220,9 @@ public class PanelATM extends JPanel {
 			});
 			panelBotones.add(botonLogin);
 			
+			for(JButton boton: grupoBotones) {
+				boton.setEnabled(false);
+			}
 			
 			tableConsulta = new JTable();
 		
