@@ -16,6 +16,7 @@ public class ConsultaATM {
 	private String PIN;
 	private Statement stmt = null;
 	private ResultSet rs = null;
+	private String cod_caja;
 	
 	public ConsultaATM(String nro_tarjeta,String PIN) {
 		this.nro_tarjeta = nro_tarjeta;
@@ -142,6 +143,49 @@ private DefaultTableModel getUltMovimientModel(String SQL) {
        }catch(SQLException e) {}
        
        return null;
+}
+
+
+
+public String transferencia(String monto,String destino) {
+	
+	try {
+		 Statement stmt = this.conexionBD.createStatement();
+	     String SQL = "call transferencia("+monto+nro_tarjeta+destino+cod_caja+")";
+		 
+		 ResultSet rs = stmt.executeQuery(SQL);
+		  
+		 rs.next();
+	     String toReturn =  rs.getString("resultado");
+	     
+	     return toReturn;
+		
+	}catch(SQLException e) {
+		
+	}
+	
+	return "0";
+	
+}
+
+public String extraccion(String monto) {
+	
+	try {
+	Statement stmt = this.conexionBD.createStatement();
+     String SQL = "call extraccion("+monto+nro_tarjeta+cod_caja+")";
+	 
+	 ResultSet rs = stmt.executeQuery(SQL);
+	  
+	 rs.next();
+     String toReturn =  rs.getString("resultado");
+     
+     return toReturn;
+      }catch(SQLException e) {
+    	  
+      }
+	
+	return "0";
+
 }
 
 }
