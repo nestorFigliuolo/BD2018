@@ -79,7 +79,7 @@ public class PanelATM extends JPanel {
 			panelBotones.add(botonConsultaSaldo);
 			
 			JButton botonUltimosMovimientos = FabBoton.construirBoton("UltimosMovimientos");
-			botonUltimosMovimientos.setEnabled(false);
+			grupoBotones.add(botonUltimosMovimientos);
 			botonUltimosMovimientos.addActionListener(new ActionListener() {
 				
 				@Override
