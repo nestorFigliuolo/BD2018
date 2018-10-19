@@ -132,8 +132,8 @@ CREATE TABLE Prestamo(
 )ENGINE = InnoDB;
 
 CREATE TABLE Pago(
-    nro_prestamo INT(8) unsigned NOT NULL,
-    nro_pago INT(2) unsigned NOT NULL,
+    nro_prestamo INT(8) unsigned NOT NULL ,
+    nro_pago INT(2) unsigned NOT NULL ,
     fecha_venc DATE NOT NULL,
     fecha_pago DATE ,
 
@@ -503,6 +503,92 @@ GRANT SELECT ON banco.Tarjeta TO 'atm'@'%';
 GRANT UPDATE ON banco.Tarjeta TO 'atm'@'%';
 
 
+###########################################################################################
+###########################Store procedures################################################
+###########################################################################################
 
+/*delimiter !  # define “!” como delimitador
+ create procedure p() 
+ 	begin
+ 	
+    SELECT * FROM trans_cajas_ahorro; 
+    
+    end; ! 
+ 
+ delimiter ; # reestablece el “;” como delimitador
+*/
+
+
+delimiter !
+  
+   create procedure transferencia(in monto DECIMAL(16,2),in nro_tarjeta BIGINT(16),in destino INT(8),in cod_caja INT(5)) 
+   	  begin
+	     
+          #Declaro variables que utilizo 
+            declare saldo_caja_origen DECIMAL(16,2);
+	        declare cliente INT(5);
+	        declare cajaOrigen INT(8);
+	       
+	        declare exit handler for sqlexception
+		         BEGIN # Si se produce una SQLEXCEPTION,  se retrocede la transacción con ROLLBACK 
+			         SELECT "SQLEXCEPTION!,  transacción abortada" AS resultado; 
+			         ROLLBACK; 
+		         END;
+
+         start transaction;#Inicio la transaccion de manera atomica 
+              
+
+                IF EXISTS (SELECT * from caja_ahorro where nro_ca = destino) THEN
+
+                         #Obtengo el numero de caja origen y cliente asociada a la tarjeta y los bloqueo
+                         #Se asume que el numero de tarjeta ingresado por parametro existe y es valido
+                            SELECT nro_cliente,nro_ca INTO cliente,cajaOrigen 
+                               FROM Tarjeta where Tarjeta.nro_tarjeta = nro_tarjeta for update;
+		                
+		                 #Obtengo el salgo actual de la caja origen y lo bloqueo
+		                   SELECT saldo INTO saldo_caja_origen from caja_ahorro where nro_ca = cajaOrigen for update;       
+
+                                IF saldo_caja_origen>=monto THEN
+
+									     #Creo una nueva transaccion para la caja origen
+									       INSERT INTO Transaccion (fecha,hora,monto) VALUES (curdate(),curtime(),monto);
+
+									     #Creo una nueva transaccion por caja para la caja origen 
+									       INSERT INTO Transaccion_por_caja VALUES (last_insert_id(),cod_caja);
+
+									     #Creo la nueva transferencia entre las cajas origen y destino
+								           INSERT INTO Transferencia VALUES (last_insert_id(),cliente,cajaOrigen,destino);
+
+								         #Creo una nueva transaccion para la caja destino
+									       INSERT INTO Transaccion (fecha,hora,monto) VALUES (curdate(),curtime(),monto);
+
+									     #Creo una nueva transaccion por caja para la caja origen 
+									       INSERT INTO Transaccion_por_caja VALUES (last_insert_id(),cod_caja);  
+								         
+								         #Cro el nuevo deposito para la caja destino
+								           INSERT INTO deposito VALUES (last_insert_id(),destino);
+								           
+								         #Actualizo la caja origen decrementando el saldo 
+									       update Caja_Ahorro set saldo=saldo-monto 
+									           where Caja_Ahorro.nro_ca = cajaOrigen;
+
+										 #Actualizo la caja destino aumentando el saldo
+										    update Caja_Ahorro set saldo=saldo+monto 
+									           where Caja_Ahorro.nro_ca = destino;
+
+									      SELECT 'La transferencia se realizo con exito' AS resultado; 
+								ELSE
+							       SELECT 'Saldo insuficiente para realizar la transferencia' AS resultado;
+								END IF; 	           
+
+			    ELSE 
+			         SELECT "Error: cuenta inexistente " AS resultado;
+                
+                END IF; 
+	     
+	     commit;#cometo la transaccion para que los datos se guarden en la bd.     
+     end; !
+
+delimiter ;
 
 
