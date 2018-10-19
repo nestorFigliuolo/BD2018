@@ -641,3 +641,32 @@ create procedure Extraccion(in monto DECIMAL(16,2),in nro_tarjeta BIGINT(16),in 
 
 
 delimiter ;
+
+
+
+#################################################################################################################
+####################################Triger#####################################################
+
+delimiter !
+create Trigger insert_pagos
+	
+	AFTER INSERT ON Prestamo 
+
+	for each row
+      BEGIN
+    
+
+       declare i INT default 1;
+       
+
+    
+
+	       while i<=NEW.cant_meses do
+		   
+		         INSERT INTO Pago(nro_prestamo,nro_pago,fecha_venc) VALUES(NEW.nro_prestamo,i,date_add(NEW.fecha,interval i month));
+	             set i = i+1;
+
+          end while;
+
+      END ; ! 
+delimiter ;
