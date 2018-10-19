@@ -235,7 +235,7 @@ public class PanelAdminPrestamos extends JPanel {
 									    	            String cant_meses = (String) pane.getComboMeses().getSelectedItem();
 									    	            
 									    	            
-											            if(Double.parseDouble(monto)<30000) {
+											            if(Double.parseDouble(monto)<=30000) {
 															String tasa = consu.getTazaInteres(cant_meses, monto);
 															String nro_cliente = consu.getNumeroCliente(nro_doc);
 															consu.crearPrestamo(cant_meses, monto, tasa,nro_cliente);

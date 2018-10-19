@@ -16,7 +16,7 @@ public class ConsultaATM {
 	private String PIN;
 	private Statement stmt = null;
 	private ResultSet rs = null;
-	private String cod_caja;
+	private String cod_caja = "100";
 	
 	public ConsultaATM(String nro_tarjeta,String PIN) {
 		this.nro_tarjeta = nro_tarjeta;
@@ -151,12 +151,16 @@ public String transferencia(String monto,String destino) {
 	
 	try {
 		 Statement stmt = this.conexionBD.createStatement();
-	     String SQL = "call transferencia("+monto+nro_tarjeta+destino+cod_caja+")";
+	     String SQL = "call transferencia("+monto+","+nro_tarjeta+","+destino+","+cod_caja+")";
 		 
 		 ResultSet rs = stmt.executeQuery(SQL);
 		  
 		 rs.next();
 	     String toReturn =  rs.getString("resultado");
+	     
+	     
+	     rs.close();
+	     stmt.close();
 	     
 	     return toReturn;
 		
@@ -172,7 +176,7 @@ public String extraccion(String monto) {
 	
 	try {
 	Statement stmt = this.conexionBD.createStatement();
-     String SQL = "call extraccion("+monto+nro_tarjeta+cod_caja+")";
+     String SQL = "call extraccion("+monto+","+nro_tarjeta+","+cod_caja+")";
 	 
 	 ResultSet rs = stmt.executeQuery(SQL);
 	  

@@ -3,6 +3,9 @@ package Banco;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javax.swing.JButton;
 
@@ -149,7 +152,7 @@ public class ConsultaAdminPrestamo {
 				       	 modelo.setValueAt(rs.getString(1), fil, 0);
 				       	 modelo.setValueAt(rs.getString(2), fil, 1);
 				       	 modelo.setValueAt(rs.getString(3), fil, 2);     
-				  	     modelo.setValueAt(Fechas.convertirDateAString(rs.getDate(4)), fil, 3);
+				  	     modelo.setValueAt(Fechas.convertirDateAString((rs.getDate(4,new GregorianCalendar()))), fil, 3);
 				      
 				  	        fil++;
 				       }
@@ -329,28 +332,20 @@ public class ConsultaAdminPrestamo {
 		                     "VALUES (curdate(),"+cant_meses+","+monto+","+tasa_interes+","+legajo+","+nro_cliente+")";
 		           stmt.execute(sql);
 		           
-		           
-		           String sql2 = "Select nro_prestamo "
-		           		       + "from prestamo natural join cliente "
-		           		       + "where fecha = curdate() "
-		           		       + "and nro_cliente = "+nro_cliente;
-		           
-		           rs = stmt.executeQuery(sql2);
-		           
-		           rs.next();
-		           
-		           String nro_prestamo = rs.getString("nro_prestamo");
-		               
-		               for(int i=1; i<=Integer.parseInt(cant_meses);i++ ) { 
-		                  sql = "INSERT INTO pago(nro_prestamo,nro_pago,fecha_venc) "
-		                  		+ "VALUES ("+nro_prestamo+","+nro_pago+",date_add(curdate(),interval "+i+" month ))";
-		                  stmt.execute(sql);
-		                  nro_pago++;
-		               }
+		            rs.close();   
 		           stmt.close();
 		           
 		        
-		 }catch(SQLException e) {
+		 }catch(SQLException ex) {
+			 
+			  // en caso de error, se muestra la causa en la consola
+		       System.out.println("SQLException: " + ex.getMessage());
+		       System.out.println("SQLState: " + ex.getSQLState());
+		       System.out.println("VendorError: " + ex.getErrorCode());
+		       JOptionPane.showMessageDialog(null,
+	                   ex.getMessage() + "\n", 
+	                   "Error al ejecutar la sentencia SQL.",
+	                   JOptionPane.ERROR_MESSAGE);
 			 
 		 }
 	}
@@ -390,26 +385,7 @@ public class ConsultaAdminPrestamo {
 		return null;
 	}
  	
- 	
- 	//Retorna un String con la fecha actual 
- 	public String getFecha() {
-		try {
-		Statement stmt = this.conexionBD.createStatement();
-	     String SQL = "select curdate()";
-	     ResultSet rs = stmt.executeQuery(SQL);
-	     
-	     rs.next();
-	     
-	     String r = rs.getString("curdate()");
-	     
-	     return r;
-		
-		}catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-		return null;
-	}
+ 
  	
  	
 	
