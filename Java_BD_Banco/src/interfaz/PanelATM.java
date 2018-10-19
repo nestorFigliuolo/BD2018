@@ -151,7 +151,13 @@ public class PanelATM extends JPanel {
 					};
 					int option = JOptionPane.showConfirmDialog(null, message, "Transferencia", JOptionPane.OK_CANCEL_OPTION);
 					if(option == JOptionPane.OK_OPTION) {
-						//Pone aca para hacer la transferencia
+						if(textMonto.getText().matches("[0-9]+") && textCajaAhorro.getText().matches("[0-9]+")) {
+							consul.transferencia(textMonto.getText(), textCajaAhorro.getText());
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "Se deben introducir solo numeros en los campos", "Error", JOptionPane.ERROR_MESSAGE);
+						}
+						
 					}
 					
 				}
@@ -171,9 +177,14 @@ public class PanelATM extends JPanel {
 					};
 					int option = JOptionPane.showConfirmDialog(null, message, "Extraccion", JOptionPane.OK_CANCEL_OPTION);
 					if(option == JOptionPane.OK_OPTION) {
-						//Aca hacer lo de la extraccion
-					}
-					
+						if(textoMonto.getText().matches("[0-9]+")) {
+							consul.extraccion(textoMonto.getText());
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "Se deben introducir solo numeros en el campo", "Error", JOptionPane.ERROR_MESSAGE);
+						}
+						
+					}					
 				}
 			});
 			panelBotones.add(botonExtraccion);
