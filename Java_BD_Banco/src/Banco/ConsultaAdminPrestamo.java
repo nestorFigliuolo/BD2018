@@ -3,9 +3,9 @@ package Banco;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.swing.JButton;
 
@@ -26,7 +26,7 @@ public class ConsultaAdminPrestamo {
 	private String password;
 	
 
-	private int nro_pago = 1;
+	
 	
 	public ConsultaAdminPrestamo(String legajo,String password) {
 		
@@ -152,7 +152,7 @@ public class ConsultaAdminPrestamo {
 				       	 modelo.setValueAt(rs.getString(1), fil, 0);
 				       	 modelo.setValueAt(rs.getString(2), fil, 1);
 				       	 modelo.setValueAt(rs.getString(3), fil, 2);     
-				  	     modelo.setValueAt(Fechas.convertirDateAString((rs.getDate(4,new GregorianCalendar()))), fil, 3);
+				  	     modelo.setValueAt(Fechas.convertirDateAString(rs.getDate(4)), fil, 3);
 				      
 				  	        fil++;
 				       }
@@ -175,9 +175,9 @@ public class ConsultaAdminPrestamo {
      try {		
 				   stmt = conexionBD.createStatement();
 			       boolean r = false; 
-				   String SQL = "select fecha from prestamo natural join cliente"
+				   String SQL = "select fecha from pago natural join prestamo natural join cliente"
 				               +" where nro_doc = "+nro_doc
-				               +" and date_add(fecha,interval cant_meses month ) > curdate()";
+				               +" and fecha_pago is null";
 				              
 				    rs = stmt.executeQuery(SQL);
 				    
@@ -298,6 +298,56 @@ public class ConsultaAdminPrestamo {
 		
 
 		}catch(SQLException e) {}
+		
+	}
+	
+	
+	
+	public List<String> tiposCantMeses() {
+		
+		try {
+		      List<String> listaMeses = new ArrayList<String>();
+		
+		        stmt = conexionBD.createStatement();
+        
+		        String SQL = "Select distinct periodo from tasa_prestamo ";
+		   		       
+		         rs = stmt.executeQuery(SQL);
+		
+		
+		         while(rs.next()) {
+		        	 
+		        	 listaMeses.add(rs.getString(1));
+		        	 
+		         }
+		          
+		         
+		return listaMeses;
+		
+		}catch(SQLException e) {
+			
+		}
+		
+		return null;
+	}
+	
+	public String MontoMaximo() {
+		
+		try {
+			
+			stmt = conexionBD.createStatement();
+	         
+			   String SQL = "Select max(monto_sup) from tasa_prestamo";
+			   		       
+			   rs = stmt.executeQuery(SQL);
+
+			   rs.next();
+			   
+			   return rs.getString("max(monto_sup)");
+			
+		}catch(SQLException e){
+			return null;
+		}
 		
 	}
 	

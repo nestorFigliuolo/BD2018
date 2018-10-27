@@ -119,10 +119,16 @@ public class PanelATM extends JPanel {
 					     boolean fechaIn = Fechas.validar(Fechas.convertirDateAString(fechaInt));
 					     boolean fechaFi = Fechas.validar(Fechas.convertirDateAString(fechaFin));
 					     
-					     if(fechaIn && fechaFi)
-					    	 consul.MovimientoPorPeriodo(tableConsulta, fechaInt,fechaFin);
-					     else {
-					    	 JOptionPane.showMessageDialog(null, "Fecha mal ingresada,el formato de fecha debe ser dia/mes/anio", "Error", JOptionPane.ERROR_MESSAGE); 
+					     if(fechaIn && fechaFi) {
+					    	      if(fechaInt.compareTo(fechaFin)<=0)
+					    	          consul.MovimientoPorPeriodo(tableConsulta, fechaInt,fechaFin);
+					    	      else {
+					    	    	  JOptionPane.showMessageDialog(null, "la fecha inicial es posterior a la fecha final", "Error", JOptionPane.ERROR_MESSAGE);   
+					    	      }
+					     }
+					   	 else {
+					   
+					   		 JOptionPane.showMessageDialog(null, "Fecha mal ingresada,el formato de fecha debe ser dia/mes/anio", "Error", JOptionPane.ERROR_MESSAGE); 
 					     }
 					     
 						
@@ -153,7 +159,7 @@ public class PanelATM extends JPanel {
 					if(option == JOptionPane.OK_OPTION) {
 						if(textMonto.getText().matches("[0-9]+") && textCajaAhorro.getText().matches("[0-9]+")) {
 							
-							JOptionPane.showMessageDialog(null,consul.transferencia(textMonto.getText(), textCajaAhorro.getText()),"Mensaje", JOptionPane.PLAIN_MESSAGE);
+							JOptionPane.showMessageDialog(null,consul.transferencia(textMonto.getText(), textCajaAhorro.getText(),tableConsulta),"Mensaje", JOptionPane.PLAIN_MESSAGE);
 							
 						}
 						else {
@@ -181,7 +187,7 @@ public class PanelATM extends JPanel {
 					if(option == JOptionPane.OK_OPTION) {
 						if(textoMonto.getText().matches("[0-9]+")) {
 							
-							JOptionPane.showMessageDialog(null,consul.extraccion(textoMonto.getText()),"Mensaje", JOptionPane.PLAIN_MESSAGE);
+							JOptionPane.showMessageDialog(null,consul.extraccion(textoMonto.getText(),tableConsulta),"Mensaje", JOptionPane.PLAIN_MESSAGE);
 						}
 						else {
 							JOptionPane.showMessageDialog(null, "Se deben introducir solo numeros en el campo", "Error", JOptionPane.ERROR_MESSAGE);

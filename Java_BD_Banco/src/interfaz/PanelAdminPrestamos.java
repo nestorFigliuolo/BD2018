@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -16,7 +17,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-
+import javax.swing.text.html.HTMLDocument.Iterator;
 
 import Banco.ConsultaAdminPrestamo;
 import javax.swing.JLabel;
@@ -112,7 +113,9 @@ public class PanelAdminPrestamos extends JPanel {
 					JTextField fieldNro = new JTextField();
 					
 		           int option = bucarCliente(fieldTipo, fieldNro);
-					
+					  
+		          
+		           
 					registrarPrestamo(option,fieldNro.getText());
 					
 				}
@@ -224,7 +227,7 @@ public class PanelAdminPrestamos extends JPanel {
 		if(op==JOptionPane.OK_OPTION) {
 			
 			if( consu.existeCliente(nro_doc)) {
-							PanelCrearPrestamo pane = new PanelCrearPrestamo();
+							PanelCrearPrestamo pane = new PanelCrearPrestamo(consu);
 							
 							if(!consu.clientePagandoPrestamo(nro_doc)) {
 									int option = JOptionPane.showConfirmDialog(null,pane, "Crear Nuevo Prestamo", JOptionPane.OK_CANCEL_OPTION);
@@ -234,8 +237,11 @@ public class PanelAdminPrestamos extends JPanel {
 									    	            String monto = pane.getTextFieldMonto().getText();
 									    	            String cant_meses = (String) pane.getComboMeses().getSelectedItem();
 									    	            
+									    	            String montoSup = consu.MontoMaximo();
 									    	            
-											            if(Double.parseDouble(monto)<=30000) {
+									    	           
+									    	          
+											            if(Double.parseDouble(monto)<=Double.parseDouble(montoSup)) {
 															String tasa = consu.getTazaInteres(cant_meses, monto);
 															String nro_cliente = consu.getNumeroCliente(nro_doc);
 															consu.crearPrestamo(cant_meses, monto, tasa,nro_cliente);
@@ -243,7 +249,7 @@ public class PanelAdminPrestamos extends JPanel {
 											            	
 														}
 														else {
-															JOptionPane.showMessageDialog(null, "El Monto del prestamo debe ser menor o igual a 30000 ","Error Monto Prestamo", JOptionPane.ERROR_MESSAGE, null);
+															JOptionPane.showMessageDialog(null, "El Monto del prestamo debe ser menor o igual a "+montoSup,"Error Monto Prestamo", JOptionPane.ERROR_MESSAGE, null);
 														}
 									     }
 							}

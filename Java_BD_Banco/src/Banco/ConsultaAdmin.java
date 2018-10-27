@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 
+
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -50,7 +51,7 @@ public class ConsultaAdmin {
 			 // cambiar el formato en que se muestran los valores de tipo DATE
 			 if	 (tabla.getColumn(i).getType()==Types.DATE)
 			 {
-			    tabla.getColumn(i).setDateFormat("dd/MM/YYYY");
+				 tabla.getColumn(i).setDateFormat("dd/MM/YYYY");
 			 }
 	     }  
 		

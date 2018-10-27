@@ -10,7 +10,7 @@ public class Conexion {
 	
 	private static final String SERVIDOR = "localhost:3306";
 	private static final String BASE_DATOS = "banco";
-	private static final String uriConexion = "jdbc:mysql://" + SERVIDOR + "/" + BASE_DATOS+"?serverTimezone=UTC";
+	private static final String uriConexion = "jdbc:mysql://" + SERVIDOR + "/" + BASE_DATOS+"?serverTimezone=America/Buenos_Aires";
 	private Connection conexionBD = null;
     private String usuario;
     private String clave;
@@ -42,6 +42,7 @@ public class Conexion {
 	{
 	      try
 	      {
+	    	 
 	         String driver ="com.mysql.cj.jdbc.Driver";
 	     	 
 	         //establece una conexión con la  B.D. "bancos"  usando directamante una tabla DBTable    

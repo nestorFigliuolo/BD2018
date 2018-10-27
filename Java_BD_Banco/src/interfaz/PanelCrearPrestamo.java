@@ -3,8 +3,13 @@ package interfaz;
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
 import java.awt.GridLayout;
+import java.util.List;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import Banco.ConsultaAdminPrestamo;
+
 import java.awt.Font;
 import java.awt.Color;
 
@@ -12,12 +17,17 @@ public class PanelCrearPrestamo extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField textFieldMonto;
 	private JComboBox<String> comboBoxMeses;
+	private List<String> listaMeses;
 	
-
-	/**
-	 * Create the panel.
-	 */
-	public PanelCrearPrestamo() {
+     
+	
+	private ConsultaAdminPrestamo consu;
+	
+	
+	public PanelCrearPrestamo(ConsultaAdminPrestamo c) {
+		
+		consu = c;
+		listaMeses = consu.tiposCantMeses();
 		setBackground(Color.LIGHT_GRAY);
 		setLayout(new GridLayout(0, 1, 0, 0));
 		
@@ -27,12 +37,9 @@ public class PanelCrearPrestamo extends JPanel {
 		
 		
 	    comboBoxMeses = new JComboBox<String>();
-		comboBoxMeses.addItem("6");
-		comboBoxMeses.addItem("12");
-		comboBoxMeses.addItem("24");
-		comboBoxMeses.addItem("60");
-		comboBoxMeses.addItem("120");
-		
+	    
+	    listaMeses.forEach(x->comboBoxMeses.addItem(x));
+	    
 		add(comboBoxMeses);
 		
 		JLabel lblMonto = new JLabel("Monto");

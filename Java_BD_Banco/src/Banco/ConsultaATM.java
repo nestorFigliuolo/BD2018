@@ -5,7 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 public class ConsultaATM {
@@ -16,7 +18,7 @@ public class ConsultaATM {
 	private String PIN;
 	private Statement stmt = null;
 	private ResultSet rs = null;
-	private String cod_caja = "100";
+	private String cod_caja = "10";
 	
 	public ConsultaATM(String nro_tarjeta,String PIN) {
 		this.nro_tarjeta = nro_tarjeta;
@@ -71,7 +73,14 @@ public class ConsultaATM {
 	     stmt.close();
 	     
 	     return toReturn;
-		}catch(SQLException ex) {}
+		}catch(SQLException ex) {
+			
+			 // en caso de error, se muestra la causa en la consola
+	         System.out.println("SQLException: " + ex.getMessage());
+	         System.out.println("SQLState: " + ex.getSQLState());
+	         System.out.println("VendorError: " + ex.getErrorCode());
+			
+		}
 		
 		return null;
 	}
@@ -82,7 +91,8 @@ public class ConsultaATM {
 	    String SQL = "select fecha,hora,tipo,monto,cod_caja,destino from tarjeta,trans_cajas_ahorro "
 	    		      +"where tarjeta.nro_ca = trans_cajas_ahorro.nro_ca"
 	    		   + " and nro_tarjeta = "+nro_tarjeta
-	    		   + " ORDER BY fecha desc,hora desc";
+	    		   + " ORDER BY fecha desc,hora desc "
+	    		   + "limit 15";
 		
               tabla.setModel(getUltMovimientModel(SQL));
               tabla.setEnabled(false);
@@ -124,7 +134,7 @@ private DefaultTableModel getUltMovimientModel(String SQL) {
        
      
        int fil = 0;
-       while( rs.next() && fil<15)
+       while( rs.next())
        {    modelo.insertRow(fil, new Object[]{});
        	 modelo.setValueAt(Fechas.convertirDateAString(rs.getDate(1)), fil, 0);
        	 modelo.setValueAt(rs.getString(2), fil, 1);
@@ -147,7 +157,7 @@ private DefaultTableModel getUltMovimientModel(String SQL) {
 
 
 
-public String transferencia(String monto,String destino) {
+public String transferencia(String monto,String destino,JTable tabla) {
 	
 	try {
 		 Statement stmt = this.conexionBD.createStatement();
@@ -162,6 +172,8 @@ public String transferencia(String monto,String destino) {
 	     rs.close();
 	     stmt.close();
 	     
+	     UltimosMovimientos(tabla);
+	     
 	     return toReturn;
 		
 	}catch(SQLException e) {
@@ -172,7 +184,7 @@ public String transferencia(String monto,String destino) {
 	
 }
 
-public String extraccion(String monto) {
+public String extraccion(String monto,JTable tabla) {
 	
 	try {
 	Statement stmt = this.conexionBD.createStatement();
@@ -182,6 +194,8 @@ public String extraccion(String monto) {
 	  
 	 rs.next();
      String toReturn =  rs.getString("resultado");
+     
+     UltimosMovimientos(tabla);
      
      return toReturn;
       }catch(SQLException e) {
