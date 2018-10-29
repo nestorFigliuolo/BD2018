@@ -39,7 +39,6 @@ public class PanelAdmin extends JPanel {
 	
 	private ConsultaAdmin consu; 
 	private JButton btnBorrar;
-	private JButton botonABM;
 	private JTextArea textArea;
 
 	/**
@@ -154,33 +153,6 @@ public class PanelAdmin extends JPanel {
 		add(panelBotones, gbc_panelBotones);
 		
 			JButton botonConsulta = FabBoton.construirBoton("Realizar Consulta");
-		
-			botonABM = FabBoton.construirBoton("Realizar [ABM]");
-			botonABM.setEnabled(false);
-			
-			botonABM.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					try {
-							consu.abmAdmin(textArea.getText());
-							 JOptionPane.showMessageDialog(null, "Ejecucion exitosa","[ABM]",JOptionPane.PLAIN_MESSAGE,null);
-					
-					}catch(SQLException ex) {
-						// en caso de error, se muestra la causa en la consola
-					       System.out.println("SQLException: " + ex.getMessage());
-					       System.out.println("SQLState: " + ex.getSQLState());
-					       System.out.println("VendorError: " + ex.getErrorCode());
-					       JOptionPane.showMessageDialog(null,
-				                   ex.getMessage() + "\n", 
-				                   "Error al ejecutar la sentencia SQL.",
-				                   JOptionPane.ERROR_MESSAGE);
-						
-					}
-					
-				}
-			});
-			
 			 
 			JButton botonLogin = FabBoton.construirBoton("Login Admin");
 			botonLogin.addActionListener(new ActionListener() {
@@ -201,7 +173,6 @@ public class PanelAdmin extends JPanel {
 					           verificar = true;
 					           consu = new ConsultaAdmin();
 				               botonConsulta.setEnabled(true);
-				               botonABM.setEnabled(true);
 				               JOptionPane.showMessageDialog(null, "Login Exitoso","Admin",JOptionPane.PLAIN_MESSAGE,null);
 							  
 				              consu.mostrarTablas(listNombreTablas);  
@@ -235,8 +206,6 @@ public class PanelAdmin extends JPanel {
 				}
 			});
 			panelBotones.add(botonConsulta);
-			
-			panelBotones.add(botonABM);
 			
 			panelBotones.add(btnBorrar);
 		add(panelBotones, gbc_panelBotones);	
