@@ -198,11 +198,19 @@ public class PanelAdmin extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					System.out.println(textArea.getText());
 					
-				boolean abm = consu.consultaAdmin(tableConsulta, textArea.getText());
-				
-				if(abm)
-					 JOptionPane.showMessageDialog(null, "Ejecucion exitosa","[ABM]",JOptionPane.PLAIN_MESSAGE,null);
-				
+					String consulta = textArea.getText();
+					if(!consulta.equals("")) {
+						boolean abm = consu.consultaAdmin(tableConsulta, textArea.getText());
+						
+						if(abm) {
+							 JOptionPane.showMessageDialog(null, "Ejecucion exitosa","[ABM]",JOptionPane.PLAIN_MESSAGE,null);
+						}
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "Se ingresó una consulta vacia", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+					
+					
 				}
 			});
 			panelBotones.add(botonConsulta);
