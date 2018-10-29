@@ -30,13 +30,10 @@ public class ConsultaAdmin {
 	//Devuelve una tabla q es el resultado de la sentencia SQL pasada por parametro
 	public boolean consultaAdmin(DBTable tabla,String sentencia)
 	{   
-						
-		
-	
-		
+		boolean toReturn = true;
 		try
 	    { 
-			boolean toReturn = true;
+			
 			
 			Statement stmt = this.conexionBD.createStatement();
 			  
@@ -68,7 +65,7 @@ public class ConsultaAdmin {
 		
 		 tabla.refresh();
 		 
-		 return toReturn;
+		 
 		 }
 	    }
 	    catch (SQLException ex)
@@ -82,7 +79,7 @@ public class ConsultaAdmin {
                    "Error al ejecutar la sentencia SQL.",
                    JOptionPane.ERROR_MESSAGE);
 	    }	
-		
+		return toReturn;
 		
 		
 	}
