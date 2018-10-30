@@ -30,7 +30,7 @@ public class ConsultaAdmin {
 	//Devuelve una tabla q es el resultado de la sentencia SQL pasada por parametro
 	public boolean consultaAdmin(DBTable tabla,String sentencia)
 	{   
-		boolean toReturn = true;
+		boolean toReturn = false;
 		try
 	    { 
 			
@@ -44,7 +44,7 @@ public class ConsultaAdmin {
 			
 		 if(rs.next() == true) {
 			 
-			toReturn = false; 
+			toReturn = true; 
 		    coneAdmin.conectarBD(tabla);	
 		    tabla.setSelectSql(sentencia);
 		    tabla.createColumnModelFromQuery(); 
