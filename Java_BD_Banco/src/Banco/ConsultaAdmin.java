@@ -32,11 +32,11 @@ public class ConsultaAdmin {
 	{   
 						
 		
-		boolean toReturn = true;
+	
 		
 		try
 	    { 
-			
+			boolean toReturn = true;
 			
 			Statement stmt = this.conexionBD.createStatement();
 			  
@@ -67,6 +67,8 @@ public class ConsultaAdmin {
 	     }  
 		
 		 tabla.refresh();
+		 
+		 return toReturn;
 		 }
 	    }
 	    catch (SQLException ex)
@@ -82,7 +84,7 @@ public class ConsultaAdmin {
 	    }	
 		
 		
-		return toReturn;
+		
 	}
 
 	
