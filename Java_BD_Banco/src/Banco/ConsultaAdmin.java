@@ -28,14 +28,15 @@ public class ConsultaAdmin {
 	
 	
 	//Devuelve una tabla q es el resultado de la sentencia SQL pasada por parametro
-	public void consultaAdmin(DBTable tabla,String sentencia)
+	public boolean consultaAdmin(DBTable tabla,String sentencia)
 	{   
 						
 		
-		
+		boolean toReturn = true;
 		
 		try
 	    { 
+			
 			
 			Statement stmt = this.conexionBD.createStatement();
 			  
@@ -45,9 +46,11 @@ public class ConsultaAdmin {
 			
 			
 		 if(rs.next() == true) {
-		coneAdmin.conectarBD(tabla);	
-		tabla.setSelectSql(sentencia);
-		tabla.createColumnModelFromQuery(); 
+			 
+			toReturn = false; 
+		    coneAdmin.conectarBD(tabla);	
+		    tabla.setSelectSql(sentencia);
+		    tabla.createColumnModelFromQuery(); 
 		
 		
 		 for (int i = 0; i < tabla.getColumnCount(); i++)
@@ -79,6 +82,7 @@ public class ConsultaAdmin {
 	    }	
 		
 		
+		return toReturn;
 	}
 
 	

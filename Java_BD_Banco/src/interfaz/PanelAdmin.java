@@ -226,7 +226,12 @@ public class PanelAdmin extends JPanel {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					System.out.println(textArea.getText());
-					consu.consultaAdmin(tableConsulta, textArea.getText());
+					
+				boolean abm = consu.consultaAdmin(tableConsulta, textArea.getText());
+				
+				if(abm)
+					 JOptionPane.showMessageDialog(null, "Ejecucion exitosa","[ABM]",JOptionPane.PLAIN_MESSAGE,null);
+				
 				}
 			});
 			panelBotones.add(botonConsulta);
