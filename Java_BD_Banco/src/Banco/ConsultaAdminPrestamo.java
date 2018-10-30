@@ -4,7 +4,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -276,19 +275,10 @@ public class ConsultaAdminPrestamo {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
-				
-				
-				
-				 
+						
 				  boton1.setEnabled(true);
 				  boton2.setEnabled(true);
-				  Object [] ob = {boton1,boton2};
-				  
-				  if(e.getClickCount()==2)
-				  { 
-			        JOptionPane.showMessageDialog(null,ob, "Acciones sobre el cliente", JOptionPane.INFORMATION_MESSAGE); 
-				  }
+			
 			}
 		});
 	                   

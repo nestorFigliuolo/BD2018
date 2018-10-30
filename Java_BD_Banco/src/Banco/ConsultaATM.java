@@ -4,10 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 public class ConsultaATM {

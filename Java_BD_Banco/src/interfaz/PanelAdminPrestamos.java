@@ -6,7 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
+
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -17,7 +17,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.text.html.HTMLDocument.Iterator;
+
 
 import Banco.ConsultaAdminPrestamo;
 import javax.swing.JLabel;

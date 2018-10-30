@@ -7,11 +7,10 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Enumeration;
+
 import java.util.List;
 
-import javax.swing.AbstractButton;
-import javax.swing.ButtonGroup;
+
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 
@@ -28,7 +27,7 @@ import javax.swing.text.MaskFormatter;
 
 import Banco.ConsultaATM;
 import Banco.Fechas;
-import jdk.nashorn.internal.scripts.JO;
+
 
 public class PanelATM extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -64,7 +63,7 @@ public class PanelATM extends JPanel {
 		
 		
 		
-			List<JButton> grupoBotones = new ArrayList();
+			List<JButton> grupoBotones = new ArrayList<JButton>();
 			
 			JButton botonConsultaSaldo = FabBoton.construirBoton("Consultar Saldo");
 			grupoBotones.add(botonConsultaSaldo);
@@ -157,7 +156,7 @@ public class PanelATM extends JPanel {
 					};
 					int option = JOptionPane.showConfirmDialog(null, message, "Transferencia", JOptionPane.OK_CANCEL_OPTION);
 					if(option == JOptionPane.OK_OPTION) {
-						if(textMonto.getText().matches("[0-9]+") && textCajaAhorro.getText().matches("[0-9]+")) {
+						if(textMonto.getText().matches("\\d+(?:\\.\\d+)?") && textCajaAhorro.getText().matches("[0-9]+")) {
 							
 							JOptionPane.showMessageDialog(null,consul.transferencia(textMonto.getText(), textCajaAhorro.getText(),tableConsulta),"Mensaje", JOptionPane.PLAIN_MESSAGE);
 							
@@ -185,7 +184,7 @@ public class PanelATM extends JPanel {
 					};
 					int option = JOptionPane.showConfirmDialog(null, message, "Extraccion", JOptionPane.OK_CANCEL_OPTION);
 					if(option == JOptionPane.OK_OPTION) {
-						if(textoMonto.getText().matches("?\\d+(?:\\.\\d+)?")) {
+						if(textoMonto.getText().matches("\\d+(?:\\.\\d+)?")) {
 							
 							JOptionPane.showMessageDialog(null,consul.extraccion(textoMonto.getText(),tableConsulta),"Mensaje", JOptionPane.PLAIN_MESSAGE);
 						}
