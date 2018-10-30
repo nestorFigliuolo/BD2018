@@ -199,21 +199,27 @@ public class PanelAdmin extends JPanel {
 					
 					String consulta = textArea.getText();
 					if(!consulta.equals("")) {
-						boolean estadoConsulta = consu.consultaAdmin(tableConsulta, consulta);
-						if(estadoConsulta) {
+						int estadoConsulta = consu.consultaAdmin(tableConsulta, consulta);
+						if(estadoConsulta == 2) {
 							JOptionPane.showMessageDialog(null, "Consulta exitosa", "Exito", JOptionPane.INFORMATION_MESSAGE);
 						}
 						else {
-							JOptionPane.showMessageDialog(null, "La consulta falló", "Error", JOptionPane.ERROR_MESSAGE);
-						}
+							 
+							 if(estadoConsulta == 1 ) {
+								 JOptionPane.showMessageDialog(null, "Sentencia Ejecutada", "Exito", JOptionPane.INFORMATION_MESSAGE);
+							 }
+							 else {
+							 JOptionPane.showMessageDialog(null, "La consulta falló", "Error", JOptionPane.ERROR_MESSAGE);
+							 }
+							 
+						 }
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "No se ingreso una consulta", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 					
 				
-					//if(consulta==false)
-						// JOptionPane.showMessageDialog(null, "Ejecucion exitosa","[ABM]",JOptionPane.PLAIN_MESSAGE,null);
+					
 					
 				}
 			});
