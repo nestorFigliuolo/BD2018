@@ -440,9 +440,6 @@ CREATE VIEW trans_cajas_ahorro AS
 
     
 
-      
-
-
 
 ###########################################################################################
 ###########################Store procedures################################################
@@ -525,7 +522,7 @@ delimiter ;
 
 delimiter !
 
-create procedure Extraccion(in monto DECIMAL(16,2),in nro_tarjeta BIGINT(16),in cod_caja INT(5))
+create procedure extraccion(in monto DECIMAL(16,2),in nro_tarjeta BIGINT(16),in cod_caja INT(5))
 	BEGIN
           #Declaro variables que utilizo 
             declare saldo_caja_origen DECIMAL(16,2);
@@ -668,6 +665,7 @@ GRANT UPDATE ON banco.Pago TO 'empleado'@'%';
 
 
 
+drop user atm;
 
 CREATE USER 'atm'@'%' IDENTIFIED BY 'atm';     
 
@@ -677,4 +675,4 @@ GRANT SELECT ON banco.Tarjeta TO 'atm'@'%';
 GRANT UPDATE ON banco.Tarjeta TO 'atm'@'%';
 
 GRANT EXECUTE ON procedure transferencia to 'atm'@'%';
-GRANT EXECUTE ON procedure extraccion to 'atm'@'%';
+GRANT EXECUTE ON procedure extraccion to 'atm
