@@ -32,12 +32,20 @@ public class ConsultaAdmin {
 	{   
 						
 		
-		coneAdmin.conectarBD(tabla);
+		
 		
 		try
 	    { 
 			
-		
+			Statement stmt = this.conexionBD.createStatement();
+			  
+			stmt.execute(sentencia);
+			
+			ResultSet rs = stmt.getResultSet();
+			
+			
+		 if(rs.next() == true) {
+		coneAdmin.conectarBD(tabla);	
 		tabla.setSelectSql(sentencia);
 		tabla.createColumnModelFromQuery(); 
 		
@@ -56,7 +64,7 @@ public class ConsultaAdmin {
 	     }  
 		
 		 tabla.refresh();
-	    
+		 }
 	    }
 	    catch (SQLException ex)
 	    {

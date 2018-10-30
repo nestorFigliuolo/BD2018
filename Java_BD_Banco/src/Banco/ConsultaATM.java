@@ -18,7 +18,7 @@ public class ConsultaATM {
 	private String PIN;
 	private Statement stmt = null;
 	private ResultSet rs = null;
-	private String cod_caja = "10";
+	private String cod_caja = "100";
 	
 	public ConsultaATM(String nro_tarjeta,String PIN) {
 		this.nro_tarjeta = nro_tarjeta;

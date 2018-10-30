@@ -38,7 +38,9 @@ public class PanelCrearPrestamo extends JPanel {
 		
 	    comboBoxMeses = new JComboBox<String>();
 	    
+	    
 	    listaMeses.forEach(x->comboBoxMeses.addItem(x));
+	    
 	    
 		add(comboBoxMeses);
 		
