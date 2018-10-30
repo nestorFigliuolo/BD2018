@@ -664,9 +664,6 @@ GRANT UPDATE ON banco.Pago TO 'empleado'@'%';
 
 
 
-
-drop user atm;
-
 CREATE USER 'atm'@'%' IDENTIFIED BY 'atm';     
 
 GRANT SELECT ON trans_cajas_ahorro TO 'atm'@'%';
@@ -675,4 +672,4 @@ GRANT SELECT ON banco.Tarjeta TO 'atm'@'%';
 GRANT UPDATE ON banco.Tarjeta TO 'atm'@'%';
 
 GRANT EXECUTE ON procedure transferencia to 'atm'@'%';
-GRANT EXECUTE ON procedure extraccion to 'atm
+GRANT EXECUTE ON procedure extraccion to 'atm'@'%';
