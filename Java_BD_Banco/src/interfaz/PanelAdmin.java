@@ -24,6 +24,7 @@ import javax.swing.event.ListSelectionListener;
 
 import Banco.ConsultaAdmin;
 import quick.dbtable.DBTable;
+import quick.dbtable.DBTableCustomizer;
 
 import java.awt.FlowLayout;
 import javax.swing.JTextArea;
@@ -228,6 +229,7 @@ public class PanelAdmin extends JPanel {
 		tableConsulta.setBorder(new TitledBorder(new LineBorder(Interfaz.textColor), "Consulta", TitledBorder.CENTER, TitledBorder.TOP, null, Interfaz.textColor));
 		tableConsulta.setBackground(Interfaz.fondo);
 		tableConsulta.setForeground(Interfaz.textColor);
+		
 		GridBagConstraints gbc_tableConsulta = new GridBagConstraints();
 		gbc_tableConsulta.insets = new Insets(0, 0, 0, 5);
 		gbc_tableConsulta.fill = GridBagConstraints.BOTH;

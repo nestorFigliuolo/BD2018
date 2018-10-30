@@ -185,7 +185,7 @@ public class PanelATM extends JPanel {
 					};
 					int option = JOptionPane.showConfirmDialog(null, message, "Extraccion", JOptionPane.OK_CANCEL_OPTION);
 					if(option == JOptionPane.OK_OPTION) {
-						if(textoMonto.getText().matches("[0-9]+")) {
+						if(textoMonto.getText().matches("?\\d+(?:\\.\\d+)?")) {
 							
 							JOptionPane.showMessageDialog(null,consul.extraccion(textoMonto.getText(),tableConsulta),"Mensaje", JOptionPane.PLAIN_MESSAGE);
 						}
